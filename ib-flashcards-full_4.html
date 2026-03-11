@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IB Interview Flashcards – Full Technical Edition</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap');
+:root{--bg:#0b0b10;--surface:#131319;--card-f:#18181f;--card-b:#121219;--gold:#c9a84c;--violet:#8b7cf6;--text:#e4e2ef;--muted:#5e5c78;--border:#222230;--green:#3ecf8e;--red:#e05c6a;--radius:18px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 15% 15%,rgba(139,124,246,.07) 0%,transparent 55%),radial-gradient(ellipse at 85% 85%,rgba(201,168,76,.05) 0%,transparent 55%);pointer-events:none;z-index:0}
+/* HEADER */
+header{width:100%;max-width:960px;padding:28px 24px 12px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;position:relative;z-index:1}
+.logo h1{font-family:'Playfair Display',serif;font-size:1.35rem;color:var(--gold);letter-spacing:.02em}
+.logo p{font-size:.72rem;color:var(--muted);margin-top:3px}
+.stats{display:flex;gap:22px}
+.stat-num{font-family:'Playfair Display',serif;font-size:1.5rem;color:var(--gold);line-height:1}
+.stat-label{font-size:.62rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-top:2px;text-align:center}
+/* FILTERS */
+.filters{width:100%;max-width:960px;padding:0 24px 16px;display:flex;gap:7px;flex-wrap:wrap;position:relative;z-index:1}
+.filter-btn{padding:5px 13px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:.72rem;cursor:pointer;transition:all .2s;letter-spacing:.02em;white-space:nowrap}
+.filter-btn:hover{border-color:var(--gold);color:var(--gold)}
+.filter-btn.active{background:var(--gold);border-color:var(--gold);color:#0b0b10;font-weight:500}
+/* PROGRESS */
+.progress-wrap{width:100%;max-width:960px;padding:0 24px 20px;position:relative;z-index:1}
+.pb-bg{height:2px;background:var(--border);border-radius:2px;overflow:hidden}
+.pb-fill{height:100%;background:linear-gradient(90deg,var(--violet),var(--gold));border-radius:2px;transition:width .4s ease}
+.pb-labels{font-size:.68rem;color:var(--muted);margin-top:5px;display:flex;justify-content:space-between}
+/* CARD */
+.card-area{width:100%;max-width:800px;padding:0 24px;perspective:1400px;position:relative;z-index:1;display:flex;flex-direction:column;align-items:center}
+.card-wrap{width:100%;cursor:pointer;margin-bottom:20px}
+.card{width:100%;min-height:300px;position:relative;transform-style:preserve-3d;transition:transform .55s cubic-bezier(.4,.2,.2,1)}
+.card.flipped{transform:rotateY(180deg)}
+.card-face{position:absolute;width:100%;min-height:300px;backface-visibility:hidden;border-radius:var(--radius);padding:36px 40px;display:flex;flex-direction:column;justify-content:center}
+.card-front{background:var(--card-f);border:1px solid var(--border);box-shadow:0 24px 70px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.035)}
+.card-back{background:var(--card-b);border:1px solid rgba(139,124,246,.25);box-shadow:0 24px 70px rgba(0,0,0,.45),inset 0 1px 0 rgba(139,124,246,.06);transform:rotateY(180deg)}
+.card-num{position:absolute;top:18px;right:22px;font-size:.67rem;color:var(--muted)}
+.card-tag{font-size:.63rem;text-transform:uppercase;letter-spacing:.12em;color:var(--gold);margin-bottom:18px;display:flex;align-items:center;gap:8px}
+.card-tag::before{content:'';display:inline-block;width:16px;height:1px;background:var(--gold);opacity:.6}
+.card-back .card-tag{color:var(--violet)}
+.card-back .card-tag::before{background:var(--violet)}
+.card-q{font-family:'Playfair Display',serif;font-size:1.28rem;line-height:1.55;color:var(--text)}
+.flip-hint{position:absolute;bottom:16px;right:20px;font-size:.62rem;color:var(--muted);opacity:.6;letter-spacing:.04em}
+.card.flipped .flip-hint{display:none}
+.card-a{font-size:.88rem;line-height:1.8;color:#c0bdd4}
+.card-a strong{color:var(--gold);font-weight:500}
+.card-a ul{padding-left:18px;margin-top:6px}
+.card-a li{margin-bottom:4px}
+/* CONTROLS */
+.controls{display:flex;gap:10px;align-items:center;margin-bottom:18px;flex-wrap:wrap;justify-content:center}
+.btn{display:flex;align-items:center;gap:6px;padding:9px 20px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-family:'DM Sans',sans-serif;font-size:.8rem;cursor:pointer;transition:all .2s;letter-spacing:.02em}
+.btn:hover{border-color:var(--gold);color:var(--gold)}
+.btn.know{border-color:var(--green);color:var(--green)}
+.btn.know:hover{background:rgba(62,207,142,.1)}
+.btn.skip{border-color:var(--red);color:var(--red)}
+.btn.skip:hover{background:rgba(224,92,106,.1)}
+.btn.primary{background:var(--gold);border-color:var(--gold);color:#0b0b10;font-weight:500}
+.btn.primary:hover{opacity:.88}
+/* COMPLETE */
+.complete-screen{display:none;flex-direction:column;align-items:center;text-align:center;padding:56px 24px;max-width:460px;margin:0 auto}
+.complete-screen.show{display:flex}
+.complete-icon{font-size:2.8rem;margin-bottom:14px}
+.complete-screen h2{font-family:'Playfair Display',serif;font-size:1.9rem;color:var(--gold);margin-bottom:8px}
+.complete-screen p{color:var(--muted);margin-bottom:26px;line-height:1.6;font-size:.9rem}
+.score-grid{display:flex;gap:36px;margin-bottom:30px}
+.score-num{font-family:'Playfair Display',serif;font-size:2rem}
+.score-num.g{color:var(--green)}
+.score-num.r{color:var(--red)}
+.score-label{font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-top:3px}
+/* KEYBOARD HINTS */
+.kb-hints{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;padding-bottom:28px}
+.kb-hint{display:flex;align-items:center;gap:5px;font-size:.67rem;color:var(--muted)}
+.kbd{display:inline-flex;align-items:center;justify-content:center;padding:2px 7px;border:1px solid var(--border);border-radius:4px;font-size:.62rem;color:var(--muted);min-width:22px}
+/* ADD CARD BUTTON */
+.add-card-btn{position:fixed;bottom:28px;right:28px;width:48px;height:48px;border-radius:50%;background:var(--gold);border:none;color:#0b0b10;font-size:1.4rem;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(201,168,76,.35);transition:all .2s;z-index:100}
+.add-card-btn:hover{transform:scale(1.1);box-shadow:0 6px 28px rgba(201,168,76,.5)}
+/* MODAL OVERLAY */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);z-index:200;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.open{display:flex}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:20px;width:100%;max-width:540px;padding:32px;box-shadow:0 32px 80px rgba(0,0,0,.6);position:relative;max-height:90vh;overflow-y:auto}
+.modal h2{font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--gold);margin-bottom:6px}
+.modal p.sub{font-size:.75rem;color:var(--muted);margin-bottom:24px}
+.modal-close{position:absolute;top:16px;right:18px;background:none;border:none;color:var(--muted);font-size:1.2rem;cursor:pointer;line-height:1;padding:4px}
+.modal-close:hover{color:var(--text)}
+.field{margin-bottom:16px}
+.field label{display:block;font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px}
+.field input,.field textarea,.field select{width:100%;background:#0e0e14;border:1px solid var(--border);border-radius:8px;padding:10px 13px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:.85rem;outline:none;transition:border-color .2s;resize:vertical}
+.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--gold)}
+.field textarea{min-height:100px}
+.field select option{background:#0e0e14}
+.modal-actions{display:flex;gap:10px;margin-top:20px;justify-content:flex-end}
+/* MANAGE TAB */
+.tab-bar{display:flex;gap:0;margin-bottom:24px;border-bottom:1px solid var(--border)}
+.tab{padding:8px 18px;background:none;border:none;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:.8rem;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .2s}
+.tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+.tab-content{display:none}
+.tab-content.active{display:block}
+/* CUSTOM CARD LIST */
+.custom-list{display:flex;flex-direction:column;gap:10px;max-height:320px;overflow-y:auto;padding-right:4px}
+.custom-list::-webkit-scrollbar{width:4px}
+.custom-list::-webkit-scrollbar-track{background:transparent}
+.custom-list::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.custom-item{background:#0e0e14;border:1px solid var(--border);border-radius:10px;padding:12px 14px;display:flex;align-items:flex-start;gap:10px}
+.custom-item-text{flex:1;min-width:0}
+.custom-item-cat{font-size:.62rem;color:var(--gold);text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px}
+.custom-item-q{font-size:.8rem;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.custom-item-btns{display:flex;gap:6px;flex-shrink:0}
+.icon-btn{width:28px;height:28px;border-radius:6px;border:1px solid var(--border);background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.8rem;transition:all .2s;color:var(--muted)}
+.icon-btn:hover.edit{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.08)}
+.icon-btn:hover.del{border-color:var(--red);color:var(--red);background:rgba(224,92,106,.08)}
+.empty-state{text-align:center;padding:32px 0;color:var(--muted);font-size:.82rem}
+.badge{display:inline-flex;align-items:center;justify-content:center;background:var(--gold);color:#0b0b10;font-size:.6rem;font-weight:700;border-radius:10px;padding:1px 6px;margin-left:5px;min-width:18px}
+/* VIEW TOGGLE */
+.view-toggle{width:100%;max-width:960px;padding:0 24px 16px;display:flex;gap:8px;position:relative;z-index:1}
+.view-btn{display:flex;align-items:center;gap:6px;padding:7px 16px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-family:'DM Sans',sans-serif;font-size:.78rem;cursor:pointer;transition:all .2s;letter-spacing:.02em}
+.view-btn:hover{border-color:var(--gold);color:var(--gold)}
+.view-btn.active{background:rgba(201,168,76,.12);border-color:var(--gold);color:var(--gold)}
+/* LIST VIEW */
+.list-view{width:100%;max-width:960px;padding:0 24px 60px;position:relative;z-index:1;display:none}
+.list-search{width:100%;background:#0e0e14;border:1px solid var(--border);border-radius:10px;padding:11px 16px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:.88rem;outline:none;transition:border-color .2s;margin-bottom:16px}
+.list-search:focus{border-color:var(--gold)}
+.list-search::placeholder{color:var(--muted)}
+.list-count{font-size:.72rem;color:var(--muted);margin-bottom:14px;letter-spacing:.03em}
+.list-group{margin-bottom:28px}
+.list-group-header{font-family:'Playfair Display',serif;font-size:.9rem;color:var(--gold);padding:8px 0;margin-bottom:10px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.list-group-count{font-family:'DM Sans',sans-serif;font-size:.65rem;color:var(--muted)}
+.list-item{background:var(--surface);border:1px solid var(--border);border-radius:12px;margin-bottom:8px;overflow:hidden;transition:border-color .2s}
+.list-item:hover{border-color:rgba(201,168,76,.35)}
+.list-item-header{padding:14px 18px;cursor:pointer;display:flex;align-items:flex-start;gap:12px}
+.list-item-num{font-size:.65rem;color:var(--muted);padding-top:3px;min-width:28px;flex-shrink:0}
+.list-item-q{font-family:'Playfair Display',serif;font-size:.95rem;line-height:1.5;color:var(--text);flex:1}
+.list-item-chevron{color:var(--muted);font-size:.8rem;flex-shrink:0;transition:transform .25s;padding-top:3px}
+.list-item.open .list-item-chevron{transform:rotate(90deg);color:var(--gold)}
+.list-item-answer{display:none;padding:0 18px 16px 58px;font-size:.85rem;line-height:1.8;color:#c0bdd4;border-top:1px solid var(--border);margin-top:0;padding-top:14px}
+.list-item.open .list-item-answer{display:block}
+.list-item-answer strong{color:var(--gold);font-weight:500}
+.list-item-answer ul{padding-left:18px;margin-top:6px}
+.list-item-answer li{margin-bottom:4px}
+.list-no-results{text-align:center;padding:48px 0;color:var(--muted);font-size:.88rem}
+/* FORMULA VIEW */
+.formula-view{width:100%;max-width:960px;padding:0 24px 60px;position:relative;z-index:1;display:none}
+.formula-section{margin-bottom:36px}
+.formula-section-title{font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--gold);padding:10px 0 10px;margin-bottom:14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.formula-section-title::before{content:'';display:inline-block;width:20px;height:1px;background:var(--gold);opacity:.6}
+.formula-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px}
+.formula-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 18px;transition:border-color .2s}
+.formula-card:hover{border-color:rgba(201,168,76,.4)}
+.formula-name{font-size:.65rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:8px}
+.formula-eq{font-family:'Playfair Display',serif;font-size:1rem;color:var(--text);line-height:1.5;margin-bottom:6px}
+.formula-eq .var{color:var(--gold)}
+.formula-eq .op{color:var(--violet);font-style:normal}
+.formula-note{font-size:.72rem;color:var(--muted);line-height:1.5;margin-top:6px}
+.formula-tag{display:inline-flex;align-items:center;font-size:.6rem;text-transform:uppercase;letter-spacing:.08em;color:var(--violet);border:1px solid rgba(139,124,246,.3);border-radius:10px;padding:1px 7px;margin-bottom:8px}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo"><h1>IB Interview Flashcards</h1><p>Full Technical Edition · 400 Questions Guide 2025</p></div>
+  <div class="stats">
+    <div class="stat"><div class="stat-num" id="s-know">0</div><div class="stat-label">Know It</div></div>
+    <div class="stat"><div class="stat-num" id="s-rev">0</div><div class="stat-label">Review</div></div>
+    <div class="stat"><div class="stat-num" id="s-tot">0</div><div class="stat-label">Cards</div></div>
+  </div>
+</header>
+<div class="filters" id="filters"></div>
+<div class="progress-wrap" id="progress-wrap" style="max-width:960px;width:100%">
+  <div class="pb-bg"><div class="pb-fill" id="pb" style="width:0%"></div></div>
+  <div class="pb-labels"><span id="pb-txt">Card 1 of 0</span><span id="pb-pct">0%</span></div>
+</div>
+<!-- View Toggle -->
+<div class="view-toggle">
+  <button class="view-btn active" id="vbtn-flash" onclick="setView('flashcard')">🃏 Flashcards</button>
+  <button class="view-btn" id="vbtn-list" onclick="setView('list')">📋 Browse All</button>
+  <button class="view-btn" id="vbtn-formulas" onclick="setView('formulas')">∑ Formulas</button>
+</div>
+
+<!-- List View -->
+<div class="list-view" id="list-view">
+  <input class="list-search" id="list-search" type="text" placeholder="Search questions and answers…" oninput="renderList()">
+  <div class="list-count" id="list-count"></div>
+  <div id="list-content"></div>
+</div>
+
+<!-- Formula View -->
+<div class="formula-view" id="formula-view">
+
+  <div class="formula-section">
+    <div class="formula-section-title">Valuation Core</div>
+    <div class="formula-grid">
+      <div class="formula-card">
+        <div class="formula-name">Perpetuity (No Growth)</div>
+        <div class="formula-eq"><span class="var">Value</span> <span class="op">=</span> <span class="var">Cash Flow</span> <span class="op">/</span> <span class="var">Discount Rate</span></div>
+        <div class="formula-note">Use when cash flow is constant forever. e.g. $100 / 10% = $1,000.</div>
+      </div>
+      <div class="formula-card">
+        <div class="formula-name">Gordon Growth Model</div>
+        <div class="formula-eq"><span class="var">Value</span> <span class="op">=</span> <span class="var">CF</span> <span class="op">/</span> (<span class="var">r</span> <span class="op">−</span> <span class="var">g</span>)</div>
+        <div class="formula-note">Requires g &lt; r. e.g. $100 / (10% − 5%) = $2,000. Also used for DCF Terminal Value.</div>
+      </div>
+      <div class="formula-card">
+        <div class="formula-name">Enterprise Value</div>
+        <div class="formula-eq"><span class="var">TEV</span> <span class="op">=</span> <span class="var">Equity Value</span> <span class="op">+</span> <span class="var">Debt</span> <span class="op">+</span> <span class="var">Preferred</span> <span class="op">+</span> <span class="var">Minority Interest</span> <span class="op">−</span> <span class="var">Cash</span></div>
+        <div class="formula-note">Represents total cost to acquire the business. Capital-structure neutral.</div>
+      </div>
+      <div class="formula-card">
+        <div class="formula-name">Equity Value (Market Cap)</div>
+        <div class="formula-eq"><span class="var">Equity Value</span> <span class="op">=</span> <span class="var">Share Price</span> <span class="op">×</span> <span class="var">Diluted Shares</span></div>
+        <div class="formula-note">Value to common shareholders only. Always use diluted share count.</div>
+      </div>
+      <div class="formula-card">
+        <div class="formula-name">Treasury Stock Method (Options)</div>
+        <div class="formula-eq"><span class="var">Net New Shares</span> <span class="op">=</span> <span class="var">Options</span> <span class="op">−</span> (<span class="var">Proceeds</span> <span class="op">/</span> <span class="var">Share Price</span>)</div>
+        <div class="formula-note">Proceeds = Options × Strike Price. Only applies when in-the-money (Strike &lt; Price).</div>
+      </div>
+      <div class="formula-card">
+        <div class="formula-name">EV / EBITDA Multiple</div>
+        <div class="formula-eq"><span class="var">Multiple</span> <span class="op">=</span> <span class="var">TEV</span> <span class="op">/</span> <span class="var">EBITDA</span></div>
+        <div class="formula-note">Most common EV-based multiple. Pair EV with metrics that don't deduct interest (EBIT, Revenue, EBITDA).</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="formula-section">
+    <div class="formula-section-title">DCF & Discount Rate</div>
+    <div class="formula-grid">
+      <div class="formula-card">
+        <div class="formula-name">Unlevered Free Cash Flow (UFCF)</div>
+        <div class="formula-eq"><span class="var">UFCF</span> <span class="op">=</span> <span class="var">EBIT</span> <span class="op">×</span> (1 <span class="op">−</span> <span class="var">t</span>) <span class="op">+</span> <span class="var">D&A</span> <span class="op">−</span> <span class="var">CapEx</span> <span class="op">−</span> <span class="var">ΔNWC</span></div>
+        <div class="formula-note">Also called FCFF. "Unlevered" = before interest. Discounted at WACC.</div>
+      </div>
+      <div class="formula-card">
+        <div class="formula-name">Terminal Value — Gordon Growth</div>
+        <div class="formula-eq"><span class="var">TV</span> <span class="op">=</span> <span class="var">FCF<sub>n</sub></span> <span class="op">×</span> (1 <span class="op">+</span> <span class="var">g</span>) <span class="op">/</span> (<span class="var">WACC</span> <span class="op">−</span> <span class="var">g</span>)</div>
+        <div class="formula-note">Long-term growth rate ≈ nominal GDP (1.5–3%). TV typically = 60–80% of total DCF value.</div>
+      </div>
+      <div class="formula-card">
+        <div class="formula-name">Terminal Value — Exit Multiple</div>
+        <div class="formula-eq"><span class="var">TV</span> <span class="op">=</span> <span class="var">EBITDA<sub>n</sub></span> <span class="op">×</span> <span class="var">Exit Multiple</span></div>
+        <div class="formula-note">Exit multiple based on current comparable company multiples. Cross-check with Gordon Growth.</div>
+      </div>
+      <div class="formula-card">
+        <div class="formula-name">WACC</div>
+        <div class="formula-eq"><span class="var">WACC</span> <span class="op">=</span> (<span class="var">E/V</span>) <span class="op">×</span> <span class="var">Ke</span> <span class="op">+</span> (<span class="var">D/V</span>) <span class="op">×</span> <span class="var">Kd</span> <span class="op">×</span> (1 <span class="op">−</span> <span class="var">t</span>)</div>
+        <div class="formula-note">V = E + D. Use market value of Equity; book value of Debt. Add Preferred if applicable.</div>
+      </div>
+      <div class="formula-card">
+        <div class="formula-name">Cost of Equity — CAPM</div>
+        <div class="formula-eq"><span class="var">Ke</span> <span class="op">=</span> <span class="var">Rf</span> <span class="op">+</span> <span class="var">β</span> <span class="op">×</span> <span class="var">ERP</span></div>
+        <div class="formula-note">Rf = 10-yr govt bond. ERP ≈ 5–7%. β reflects both business risk and leverage risk.</div>
+      </div>
+      <div class="formula-card">
+        <div class="formula-name">Unlever Beta</div>
+        <div class="formula-eq"><span class="var">βu</span> <span class="op">=</span> <span class="var">βL</span> <span class="op">/</span> (1 <span class="op">+</span> <span class="var">D/E</span> <span class="op">×</span> (1 <span class="op">−</span> <span class="var">t</span>))</div>
+        <div class="formula-note">Removes effect of leverage to isolate pure business risk. Always βu ≤ βL. Relever using target's D/E.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="formula-section">
+    <div class="formula-section-title">Accounting & Financial Metrics</div>
+    <div class="formula-grid">
+      <div class="formula-card">
+        <div class="formula-name">EBITDA</div>
+        <div class="formula-eq"><span class="var">EBITDA</span> <span class="op">=</span> <span class="var">Operating Income</span> <span class="op">+</span> <span class="var">D&A</span></div>
+        <div class="formula-note">Add back D&A from Cash Flow Statement (often buried in COGS/SG&A on the Income Statement).</div>
+      </div>
+      <div class="formula-card">
+        <div class="formula-name">Free Cash Flow (Simple)</div>
+        <div class="formula-eq"><span class="var">FCF</span> <span class="op">=</span> <span class="var">Cash Flow from Operations</span> <span class="op">−</span> <span class="var">CapEx</span></div>
+        <div class="formula-note">Represents discretionary cash flow after funding the business. Positive & growing = self-sufficient.</div>
+      </div>
+      <div class="formula-card">
+        <div class="formula-name">Working Capital</div>
+        <div class="formula-eq"><span class="var">NWC</span> <span class="op">=</span> <span class="var">Operating Current Assets</span> <span class="op">−</span> <span class="var">Operating Current Liabilities</span></div>
+        <div class="formula-note">Exclude Cash, Investments, and Debt. Increase in NWC = use of cash (negative on CFS).</div>
+      </div>
+      <div class="formula-card">
+        <div class="formula-name">ROIC</div>
+        <div class="formula-eq"><span class="var">ROIC</span> <span class="op">=</span> <span class="var">NOPAT</span> <span class="op">/</span> <span class="var">Invested Capital</span></div>
+        <div class="formula-note">NOPAT = Operating Income × (1−t). Invested Capital = Equity + Debt + Preferred − Cash.</div>
+      </div>
+      <div class="formula-card">
+        <div class="formula-name">Net Interest Margin (Banks)</div>
+        <div class="formula-eq"><span class="var">NIM</span> <span class="op">=</span> (Interest Income <span class="op">−</span> Interest Expense) <span class="op">/</span> <span class="var">Avg Earning Assets</span></div>
+        <div class="formula-note">Core bank profitability metric. Rising rates usually expand NIM if loans reprice faster than deposits.</div>
+      </div>
+      <div class="formula-card">
+        <div class="formula-name">Net Operating Loss (DTA)</div>
+        <div class="formula-eq"><span class="var">DTA from NOL</span> <span class="op">≈</span> <span class="var">Tax Rate</span> <span class="op">×</span> <span class="var">NOL Balance</span></div>
+        <div class="formula-note">NOLs can offset up to 80% of future taxable income (U.S. post-TCJA). Key in M&A analysis.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="formula-section">
+    <div class="formula-section-title">LBO & Returns</div>
+    <div class="formula-grid">
+      <div class="formula-card">
+        <div class="formula-name">Equity Proceeds (LBO Exit)</div>
+        <div class="formula-eq"><span class="var">Equity Proceeds</span> <span class="op">=</span> <span class="var">Exit EV</span> <span class="op">−</span> <span class="var">Remaining Debt</span></div>
+        <div class="formula-note">Exit EV = Exit Year EBITDA × Exit Multiple. Remaining Debt = Initial Debt − Debt Repaid.</div>
+      </div>
+      <div class="formula-card">
+        <div class="formula-name">Money-on-Money Multiple (MoM)</div>
+        <div class="formula-eq"><span class="var">MoM</span> <span class="op">=</span> <span class="var">Equity Proceeds</span> <span class="op">/</span> <span class="var">Initial Equity</span></div>
+        <div class="formula-note">Initial Equity = Purchase EV × Equity %. Simple return measure, ignores time value.</div>
+      </div>
+      <div class="formula-card">
+        <div class="formula-name">IRR Rules of Thumb (5 years)</div>
+        <div class="formula-eq">2x <span class="op">≈</span> 15% · 2.5x <span class="op">≈</span> 20% · 3x <span class="op">≈</span> 25%</div>
+        <div class="formula-note">Same MoM over fewer years = higher IRR. 2x in 3 yrs ≈ 26%. 3x in 3 yrs ≈ 44%.</div>
+      </div>
+      <div class="formula-card">
+        <div class="formula-name">LBO FCF (for Debt Repayment)</div>
+        <div class="formula-eq"><span class="var">FCF</span> <span class="op">=</span> <span class="var">EBITDA</span> <span class="op">−</span> <span class="var">Net Interest</span> <span class="op">−</span> <span class="var">Cash Taxes</span> <span class="op">±</span> <span class="var">ΔNWC</span> <span class="op">−</span> <span class="var">CapEx</span></div>
+        <div class="formula-note">Cash available for debt repayment = Beginning Cash + FCF − Min Cash − Mandatory Repayments.</div>
+      </div>
+      <div class="formula-card">
+        <div class="formula-name">Debt Capacity (LevFin)</div>
+        <div class="formula-eq"><span class="var">Max Debt</span> <span class="op">=</span> <span class="var">EBITDA</span> <span class="op">×</span> <span class="var">Max Debt/EBITDA</span></div>
+        <div class="formula-note">Typical LBO leverage: 4–6× EBITDA. Also check EBITDA/Interest ≥ 2–2.5× (coverage ratio).</div>
+      </div>
+      <div class="formula-card">
+        <div class="formula-name">Dividend Recap Impact on IRR</div>
+        <div class="formula-eq"><span class="var">Earlier cash out</span> <span class="op">→</span> <span class="var">↑ IRR</span>, same <span class="var">MoM</span></div>
+        <div class="formula-note">PE firm borrows more, pays itself a dividend. Boosts IRR by returning capital early without a full exit.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="formula-section">
+    <div class="formula-section-title">Merger Models (M&A)</div>
+    <div class="formula-grid">
+      <div class="formula-card">
+        <div class="formula-name">Accretion / Dilution Test</div>
+        <div class="formula-eq"><span class="var">Seller Yield</span> <span class="op">></span> <span class="var">Weighted Cost</span> <span class="op">→</span> Accretive</div>
+        <div class="formula-note">Seller Yield = Seller NI / Purchase Equity Value. Weighted Cost = blend of cash, debt, stock costs.</div>
+      </div>
+      <div class="formula-card">
+        <div class="formula-name">Cost of Stock Funding</div>
+        <div class="formula-eq"><span class="var">Cost of Stock</span> <span class="op">=</span> 1 <span class="op">/</span> <span class="var">Buyer P/E</span></div>
+        <div class="formula-note">If Buyer P/E > Seller purchase P/E in a 100% stock deal → accretive.</div>
+      </div>
+      <div class="formula-card">
+        <div class="formula-name">After-Tax Cost of Debt / Cash</div>
+        <div class="formula-eq"><span class="var">After-Tax Cost</span> <span class="op">=</span> <span class="var">Rate</span> <span class="op">×</span> (1 <span class="op">−</span> <span class="var">t</span>)</div>
+        <div class="formula-note">Interest is tax-deductible. At 25% tax, a 10% debt rate costs only 7.5% after tax.</div>
+      </div>
+      <div class="formula-card">
+        <div class="formula-name">Goodwill (Acquisition)</div>
+        <div class="formula-eq"><span class="var">Goodwill</span> <span class="op">=</span> <span class="var">Purchase Price</span> <span class="op">−</span> <span class="var">Fair Value of Net Assets</span></div>
+        <div class="formula-note">Net Assets = Assets − Liabilities at fair value. First allocate to identifiable intangibles, then Goodwill plugs the gap.</div>
+      </div>
+      <div class="formula-card">
+        <div class="formula-name">Shares Issued in Stock Deal</div>
+        <div class="formula-eq"><span class="var">New Shares</span> <span class="op">=</span> <span class="var">Purchase Equity Value</span> <span class="op">/</span> <span class="var">Buyer Share Price</span></div>
+        <div class="formula-note">Combined EPS = Combined NI / (Buyer Shares + New Shares). Compare to standalone Buyer EPS.</div>
+      </div>
+      <div class="formula-card">
+        <div class="formula-name">Purchase Premium</div>
+        <div class="formula-eq"><span class="var">Premium</span> <span class="op">=</span> (<span class="var">Offer Price</span> <span class="op">−</span> <span class="var">Pre-Announcement Price</span>) <span class="op">/</span> <span class="var">Pre-Announcement Price</span></div>
+        <div class="formula-note">Typical control premiums: 20–30%+. Precedent transactions include this; public comps do not.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="formula-section">
+    <div class="formula-section-title">Real Estate & REITs</div>
+    <div class="formula-grid">
+      <div class="formula-card">
+        <div class="formula-name">Net Operating Income (NOI)</div>
+        <div class="formula-eq"><span class="var">NOI</span> <span class="op">=</span> <span class="var">Property Revenue</span> <span class="op">−</span> <span class="var">Operating Expenses</span> <span class="op">−</span> <span class="var">Property Taxes</span></div>
+        <div class="formula-note">Excludes interest, debt repayment, and most CapEx. Real estate equivalent of EBITDA.</div>
+      </div>
+      <div class="formula-card">
+        <div class="formula-name">Cap Rate</div>
+        <div class="formula-eq"><span class="var">Cap Rate</span> <span class="op">=</span> <span class="var">Forward NOI</span> <span class="op">/</span> <span class="var">Property Value</span></div>
+        <div class="formula-note">Reciprocal of a valuation multiple. 5% Cap Rate = 20× NOI. Lower Cap Rate → higher value.</div>
+      </div>
+      <div class="formula-card">
+        <div class="formula-name">FFO (Funds From Operations)</div>
+        <div class="formula-eq"><span class="var">FFO</span> <span class="op">=</span> <span class="var">Net Income</span> <span class="op">+</span> <span class="var">RE D&A</span> <span class="op">−</span> <span class="var">Gains on Sales</span></div>
+        <div class="formula-note">Real estate D&A added back because properties typically appreciate. Replaces EPS for REITs.</div>
+      </div>
+      <div class="formula-card">
+        <div class="formula-name">AFFO (Adjusted FFO)</div>
+        <div class="formula-eq"><span class="var">AFFO</span> <span class="op">=</span> <span class="var">FFO</span> <span class="op">−</span> <span class="var">Maintenance CapEx</span> <span class="op">−</span> <span class="var">Straight-Line Rent Adj.</span></div>
+        <div class="formula-note">More conservative than FFO. Closer to true distributable cash flow. Use P/AFFO for valuation.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="formula-section">
+    <div class="formula-section-title">Key Ratios to Memorise</div>
+    <div class="formula-grid">
+      <div class="formula-card">
+        <div class="formula-name">Leverage Ratio</div>
+        <div class="formula-eq"><span class="var">Debt / EBITDA</span></div>
+        <div class="formula-note">Investment grade: &lt;3×. LBO range: 4–6×. Higher = riskier. Lenders set max covenant.</div>
+      </div>
+      <div class="formula-card">
+        <div class="formula-name">Interest Coverage</div>
+        <div class="formula-eq"><span class="var">EBITDA / Interest Expense</span></div>
+        <div class="formula-note">Healthy: ≥2.5×. Below 1× = company can't cover interest from operations.</div>
+      </div>
+      <div class="formula-card">
+        <div class="formula-name">Price / Earnings (P/E)</div>
+        <div class="formula-eq"><span class="var">P/E</span> <span class="op">=</span> <span class="var">Equity Value</span> <span class="op">/</span> <span class="var">Net Income</span></div>
+        <div class="formula-note">Equity Value multiple — Net Income already deducts interest, so pair with Equity, not EV.</div>
+      </div>
+      <div class="formula-card">
+        <div class="formula-name">P/Book Value (Banks)</div>
+        <div class="formula-eq"><span class="var">P/BV</span> <span class="op">=</span> <span class="var">Equity Value</span> <span class="op">/</span> <span class="var">Book Value of Equity</span></div>
+        <div class="formula-note">P/TBV (Tangible Book) is most common in bank M&A. Excludes Goodwill and intangibles.</div>
+      </div>
+      <div class="formula-card">
+        <div class="formula-name">LTV / CAC (SaaS)</div>
+        <div class="formula-eq"><span class="var">LTV / CAC</span> <span class="op">></span> 3× <span class="op">=</span> Healthy</div>
+        <div class="formula-note">LTV = lifetime customer value. CAC = customer acquisition cost. Net Revenue Retention > 100% = expansion exceeds churn.</div>
+      </div>
+      <div class="formula-card">
+        <div class="formula-name">Utility Allowed Revenue</div>
+        <div class="formula-eq"><span class="var">Revenue</span> <span class="op">=</span> <span class="var">Pre-Tax Income</span> <span class="op">+</span> <span class="var">Interest</span> <span class="op">+</span> <span class="var">O&M</span> <span class="op">+</span> <span class="var">D&A</span></div>
+        <div class="formula-note">Pre-Tax Income = Allowed NI / (1−t). Allowed NI = Equity Base × Authorized ROE.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="card-area">
+  <div class="card-wrap" id="cwrap" onclick="flip()">
+    <div class="card" id="card">
+      <div class="card-face card-front">
+        <div class="card-num" id="cn">1/0</div>
+        <div class="card-tag" id="ctag">Category</div>
+        <div class="card-q" id="cq">Loading…</div>
+        <div class="flip-hint">click to reveal →</div>
+      </div>
+      <div class="card-face card-back">
+        <div class="card-num" id="cn2">1/0</div>
+        <div class="card-tag">Answer</div>
+        <div class="card-a" id="ca"></div>
+      </div>
+    </div>
+  </div>
+  <div class="controls" id="controls">
+    <button class="btn" onclick="prev()">← Prev</button>
+    <button class="btn skip" onclick="markRev()">✕ Review Later</button>
+    <button class="btn know" onclick="markKnow()">✓ Got It</button>
+    <button class="btn" onclick="next()">Next →</button>
+  </div>
+  <div class="complete-screen" id="done">
+    <div class="complete-icon">🏦</div>
+    <h2>Deck Complete!</h2>
+    <p>You've gone through all cards in this set.</p>
+    <div class="score-grid">
+      <div class="stat"><div class="score-num g" id="f-know">0</div><div class="score-label">Know It</div></div>
+      <div class="stat"><div class="score-num r" id="f-rev">0</div><div class="score-label">Review</div></div>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center">
+      <button class="btn primary" onclick="retryRev()">Retry Review Cards</button>
+      <button class="btn" onclick="restartAll()">Start Over</button>
+    </div>
+  </div>
+  <div class="kb-hints" id="kbh">
+    <div class="kb-hint"><kbd class="kbd">Space</kbd> Flip</div>
+    <div class="kb-hint"><kbd class="kbd">→</kbd> Next</div>
+    <div class="kb-hint"><kbd class="kbd">←</kbd> Prev</div>
+    <div class="kb-hint"><kbd class="kbd">G</kbd> Got it</div>
+    <div class="kb-hint"><kbd class="kbd">R</kbd> Review</div>
+  </div>
+</div>
+
+<!-- Floating Add Button -->
+<button class="add-card-btn" onclick="openModal()" title="Add custom flashcard">+</button>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modal-overlay" onclick="handleOverlayClick(event)">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <h2>Custom Flashcards</h2>
+    <p class="sub">Add your own cards — they're saved in your browser and appear in the deck.</p>
+    <div class="tab-bar">
+      <button class="tab active" onclick="switchTab('add',this)">+ Add New</button>
+      <button class="tab" onclick="switchTab('manage',this)">Manage <span class="badge" id="custom-count">0</span></button>
+    </div>
+    <!-- ADD TAB -->
+    <div class="tab-content active" id="tab-add">
+      <div class="field">
+        <label>Category</label>
+        <input type="text" id="new-cat" placeholder="e.g. My Notes, DCF, LBO Models…" list="cat-suggestions">
+        <datalist id="cat-suggestions"></datalist>
+      </div>
+      <div class="field">
+        <label>Question</label>
+        <textarea id="new-q" placeholder="Write your question here…"></textarea>
+      </div>
+      <div class="field">
+        <label>Answer</label>
+        <textarea id="new-a" placeholder="Write the answer here…"></textarea>
+      </div>
+      <div class="modal-actions">
+        <button class="btn" onclick="closeModal()">Cancel</button>
+        <button class="btn primary" onclick="saveCard()">Save Card</button>
+      </div>
+    </div>
+    <!-- MANAGE TAB -->
+    <div class="tab-content" id="tab-manage">
+      <div class="custom-list" id="custom-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Modal -->
+<div class="modal-overlay" id="edit-overlay" onclick="handleEditOverlayClick(event)">
+  <div class="modal">
+    <button class="modal-close" onclick="closeEdit()">✕</button>
+    <h2>Edit Card</h2>
+    <p class="sub">Update your custom flashcard.</p>
+    <input type="hidden" id="edit-id">
+    <div class="field">
+      <label>Category</label>
+      <input type="text" id="edit-cat" list="cat-suggestions">
+    </div>
+    <div class="field">
+      <label>Question</label>
+      <textarea id="edit-q"></textarea>
+    </div>
+    <div class="field">
+      <label>Answer</label>
+      <textarea id="edit-a"></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeEdit()">Cancel</button>
+      <button class="btn primary" onclick="updateCard()">Update Card</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const CARDS = [
+// ─── FINANCE CONCEPTS ────────────────────────────────────────
+{cat:"Finance Concepts",q:"Explain the time value of money. Is it about inflation?",a:"No. The time value of money means that you could invest money today and earn a return, making that money worth more in the future. For example, if you invest $100 today at a 10% return, you will have $110 after one year, which is better than receiving $100 one year from now. Inflation is a secondary factor: it is one reason why Discount Rates are typically higher than zero, but the concept works even in a world without inflation."},
+{cat:"Finance Concepts",q:"What does the Discount Rate mean?",a:"The Discount Rate represents your opportunity cost or targeted annualized return: what you could earn by investing in similar assets with similar risk. If you could earn 10% per year investing in other comparable opportunities, then you would use 10% as your Discount Rate. A higher Discount Rate makes future cash flows worth less today, while a lower rate makes them worth more."},
+{cat:"Finance Concepts",q:"A company generates $100 of cash flow per year into eternity, never growing. You want a 10% annual return. How much would you pay?",a:"Company Value equals Cash Flow divided by the Discount Rate, so you would pay $100 divided by 10%, which equals $1,000. If your targeted return were 20% instead, you would pay only $500. The formula assumes no growth and a constant discount rate applied into perpetuity."},
+{cat:"Finance Concepts",q:"A company generates $100 of cash flow, growing at 5% per year forever. You can earn 10% elsewhere. How much is it worth?",a:"Company Value equals Cash Flow divided by (Discount Rate minus Growth Rate), so you would pay $100 divided by (10% minus 5%), which equals $2,000. A higher growth rate increases the company's value, while a higher discount rate decreases it. This formula is sometimes called the Gordon Growth Model and requires that the growth rate be less than the discount rate."},
+{cat:"Finance Concepts",q:"What is Present Value vs. Net Present Value?",a:"The Present Value of an asset equals its future cash flows discounted at the appropriate rate to reflect their worth in today's dollars. The Present Value increases if the company's expected future cash flows or growth rate increases, or if the Discount Rate decreases. Net Present Value goes one step further: it takes the Present Value of those future cash flows and subtracts the upfront cost or asking price of the investment. If the NPV is positive, the investment is worth more than its current price and should be pursued."},
+{cat:"Finance Concepts",q:"What is the Internal Rate of Return (IRR)?",a:"The IRR is the Discount Rate at which the Net Present Value of an investment equals zero. More intuitively, you can think of it as the effective compounded annualized return on an investment. For example, if you invest $1,000 today and receive $2,000 after five years, the IRR represents the rate you would need to earn, compounded annually, to turn that $1,000 into $2,000 in five years, which works out to approximately 14.9%. To calculate it in Excel, you enter the upfront investment as a negative and the future cash flows as positives, then apply the IRR function."},
+{cat:"Finance Concepts",q:"What affects IRR vs. what affects Present Value?",a:"Many factors affect both metrics in the same direction: higher cash flows, higher growth rates, or higher future sale values increase both the Present Value and the IRR, while lower values reduce both. One major difference is that the Discount Rate does not affect the IRR, because you are solving for the Discount Rate when you calculate the IRR. Another difference is that the upfront price or asking price affects the IRR, since it is entered as a negative in the calculation, but it does not impact the Present Value. You compare the Present Value to the upfront price separately."},
+{cat:"Finance Concepts",q:"What is WACC?",a:"WACC stands for Weighted Average Cost of Capital and is the most common Discount Rate used to value companies. To calculate it, you multiply the percentage of Equity in the company's capital structure by the Cost of Equity, multiply the percentage of Debt by the after-tax Cost of Debt, and add them together. For example, if a company uses 60% Equity at a 10% cost and 40% Debt at a 5% cost, then WACC equals 60% times 10% plus 40% times 5%, which is 8%. WACC represents the average annualized return you would expect to earn if you invested proportionally in both the Debt and the Equity of a company and held them for the long term."},
+
+// ─── ACCOUNTING CONCEPTS ─────────────────────────────────────
+{cat:"Accounting Concepts",q:"What are the three financial statements and why do we need them?",a:"The three main financial statements are the Income Statement, the Balance Sheet, and the Cash Flow Statement. The Income Statement shows the company's revenue, expenses, and taxes over a period and ends with Net Income, which represents after-tax profits. The Balance Sheet shows the company's Assets and how it paid for those Assets using Liabilities and Equity at a specific point in time, and Assets must always equal Liabilities plus Equity. The Cash Flow Statement begins with Net Income, adjusts for non-cash items and changes in working capital, and shows cash flows from investing and financing activities. You need all three because there is always a difference between Net Income and actual cash generated, and the statements together let you estimate that cash flow accurately."},
+{cat:"Accounting Concepts",q:"How do the three financial statements link together?",a:"To link the statements, Net Income from the Income Statement becomes the top line of the Cash Flow Statement and also flows into Retained Earnings on the Balance Sheet through Common Shareholders' Equity. You then adjust Net Income on the Cash Flow Statement for non-cash items such as Depreciation and Amortization and for changes in working capital items like Accounts Receivable, which gets you to Cash Flow from Operations. After adding investing and financing cash flows, the ending cash balance flows directly onto the Balance Sheet as Cash. Each line item on the Cash Flow Statement also links to its corresponding Balance Sheet account, such as CapEx linking to Net PP&E, so that the Balance Sheet remains balanced."},
+{cat:"Accounting Concepts",q:"What's the most important financial statement?",a:"The Cash Flow Statement is the most important single statement because it shows how much cash a company actually generates, and almost all valuation is based on cash flow. The Income Statement includes non-cash revenue and expenses and excludes major cash spending items like Capital Expenditures, so it does not accurately represent a company's true cash position. While the Balance Sheet is a useful snapshot of a company's resources and obligations, neither it nor the Income Statement tells you as directly as the Cash Flow Statement whether the company is generating or consuming cash."},
+{cat:"Accounting Concepts",q:"How do financial statements differ under IFRS vs. U.S. GAAP?",a:"Income Statements and Balance Sheets tend to be similar across regions, but companies using IFRS often start the Cash Flow Statement with something other than Net Income, such as Operating Income or Pre-Tax Income. IFRS-based companies also tend to place items in less predictable locations on the Cash Flow Statement, so you may need to rearrange it. One important difference relates to lease accounting: under IFRS, the Operating Lease Expense is split into Interest and Depreciation elements on the Income Statement, while under U.S. GAAP it is recorded as a simple Rental Expense."},
+{cat:"Accounting Concepts",q:"When should an item appear on the Income Statement?",a:"To appear on the Income Statement, an item must meet two conditions. First, it must correspond entirely to the current period: revenue and expenses are recognized based on the delivery of products or services, so a factory purchase cannot appear in full because it will be useful for many years beyond the current period. Second, it must affect the business income available to common shareholders, meaning if something does not affect the owners of the business it should not appear on the Income Statement. This second condition explains why Preferred Dividends appear on the Income Statement even though they are not an operating expense."},
+{cat:"Accounting Concepts",q:"Why is Accounts Receivable an Asset but Deferred Revenue a Liability?",a:"Accounts Receivable is an Asset because it represents a future benefit to the company, specifically the receipt of cash from customers who have already received goods or services. Deferred Revenue is a Liability because it represents a future obligation: the company has already collected the cash but has not yet delivered the product or service, so it owes the customer that delivery in the future. They are opposites in this sense: Accounts Receivable has been delivered but not yet collected, while Deferred Revenue has been collected but not yet delivered."},
+{cat:"Accounting Concepts",q:"What are Deferred Taxes and how do they work?",a:"Deferred Taxes arise when the Book Taxes shown on the Income Statement differ from what the company actually pays in Cash Taxes to the government in the same period. They typically appear because of Income Statement expenses that are not yet tax-deductible, such as Stock-Based Compensation or Asset Impairments, which are only deductible for tax purposes at a later stage. When these items are initially recorded, the company pays more in Cash Taxes than the Income Statement suggests, creating a Deferred Tax Asset. Later, when those items become deductible, the Deferred Tax reverses and the company pays less in Cash Taxes."},
+{cat:"Accounting Concepts",q:"What are Deferred Tax Assets vs. Deferred Tax Liabilities?",a:"Deferred Tax Assets represent potential future cash-tax savings for the company, while Deferred Tax Liabilities represent additional cash-tax payments the company will owe in the future. Deferred Tax Liabilities often arise from accelerated Depreciation for tax purposes, where the company reduces its tax burden now but will owe more later. Deferred Tax Assets may arise when the company accumulates a Net Operating Loss, which it can carry forward to offset future taxable income, or when expenses are deducted for book purposes before they are deductible for tax purposes."},
+{cat:"Accounting Concepts",q:"Why does a company create Goodwill in an acquisition?",a:"Goodwill must be created after an acquisition to ensure the Balance Sheet remains in balance. In an acquisition, you write down the seller's Common Shareholders' Equity and combine its Assets and Liabilities with the acquirer's. Most acquirers pay a premium above the fair value of the seller's net assets, which means the Balance Sheet would go out of balance without an adjustment. You first create Other Intangible Assets to represent the fair values of identifiable items such as patents, trademarks, and customer relationships, and Goodwill then plugs the remaining gap to ensure that Assets still equal Liabilities plus Equity."},
+{cat:"Accounting Concepts",q:"Explain lease accounting under ASC 842/IFRS 16.",a:"Under ASC 842 and IFRS 16, leases lasting more than 12 months now appear directly on the Balance Sheet as a Right-of-Use Asset and a corresponding Lease Liability. For Finance Leases under both standards, and for all leases under IFRS, the rental expense is split into Interest and Depreciation elements on the Income Statement. Under U.S. GAAP for Operating Leases, the company records a simple Rental Expense on the Income Statement without the Interest and Depreciation split, but the Right-of-Use Asset and Lease Liability on the Balance Sheet still decrease each year based on estimates for Lease Depreciation and Lease Principal Repayments."},
+{cat:"Accounting Concepts",q:"What is EBITDA and why do people use it?",a:"EBITDA stands for Earnings Before Interest, Taxes, Depreciation, and Amortization, and it is typically calculated by starting with Operating Income and adding back Depreciation and Amortization from the Cash Flow Statement. It is widely used because it serves as a rough proxy for operating cash flow that is neutral to a company's capital structure and non-cash accounting charges, making it useful for comparing companies of different sizes and capital structures. However, EBITDA is not a perfect measure of cash flow because it ignores Capital Expenditures, changes in Working Capital, and the actual tax and interest payments the company must make."},
+{cat:"Accounting Concepts",q:"What are Net Operating Losses (NOLs)?",a:"Net Operating Losses arise when a company's taxable losses in a period exceed its taxable income, resulting in a negative taxable income figure. Under current U.S. tax rules, companies can carry these losses forward indefinitely to offset up to 80% of taxable income in future years, which reduces their future cash tax payments. NOLs are recorded as a component of Deferred Tax Assets on the Balance Sheet, valued at approximately the Tax Rate multiplied by the NOL balance, and they are a key consideration in M&A transactions because acquirers can potentially use them."},
+
+// ─── ACCOUNTING CALCULATIONS ──────────────────────────────────
+{cat:"Accounting Calculations",q:"A company hires an employee for $100K/year. Walk through the financial statements. (25% tax rate)",a:"On the Income Statement, Operating Expenses increase by $100,000, which reduces Pre-Tax Income by $100,000 and Net Income by $75,000 after a 25% tax rate. On the Cash Flow Statement, Net Income is down by $75,000 and there are no other adjustments, so Cash at the bottom is also down by $75,000. On the Balance Sheet, Cash is down by $75,000 on the Assets side, and Equity is down by $75,000 on the Liabilities and Equity side due to the Net Income reduction, so both sides balance. The intuition is that the company spends $100,000 more but saves $25,000 in taxes, resulting in a net cash outflow of $75,000."},
+{cat:"Accounting Calculations",q:"Depreciation decreases by $10. Walk through the statements. (25% tax rate)",a:"On the Income Statement, a $10 decrease in Depreciation increases Pre-Tax Income by $10, and Net Income rises by $7.50 after a 25% tax rate. On the Cash Flow Statement, Net Income is up by $7.50, but now you add back $10 less of Depreciation than before, so Cash at the bottom is actually down by $2.50. On the Balance Sheet, Cash is down by $2.50, and Net PP&E is up by $10 because of the reduced Depreciation, so Total Assets are up by $7.50. On the Liabilities and Equity side, Equity is up by $7.50 due to the higher Net Income, so both sides balance. The intuition is that the company loses a $2.50 tax benefit by recording lower Depreciation."},
+{cat:"Accounting Calculations",q:"A factory with book value $100 sells for $140. Walk through the statements. (25% tax rate)",a:"This transaction creates a Realized Gain of $40, calculated as the sale price of $140 minus the book value of $100. On the Income Statement, the $40 gain increases Pre-Tax Income by $40, and Net Income rises by $30 at a 25% tax rate. On the Cash Flow Statement, Net Income is up by $30, but you subtract the $40 gain as a non-cash adjustment since the actual cash appears in the investing section, and then you add the $140 in cash proceeds, leaving Cash up by $130. On the Balance Sheet, Cash is up by $130, and Net PP&E is down by $100, so Total Assets are up by $30. Equity is also up by $30 due to the Net Income increase, so both sides balance."},
+{cat:"Accounting Calculations",q:"A customer orders a $100 product and receives it but hasn't paid yet. Walk through both steps. (25% tax rate)",a:"In Step 1, when the product is delivered without cash received, Revenue increases by $100 on the Income Statement, and Net Income rises by $75 after taxes. On the Cash Flow Statement, Net Income is up by $75, but Accounts Receivable increases by $100, which is a use of cash, so Cash at the bottom is down by $25. On the Balance Sheet, Cash is down by $25, Accounts Receivable is up by $100, and Equity is up by $75, so both sides are up by $75. In Step 2, when the customer pays, there is no Income Statement change. On the Cash Flow Statement, Cash rises by $100 as Accounts Receivable decreases, and the Balance Sheet returns to a net $75 cash increase with Accounts Receivable back to zero."},
+{cat:"Accounting Calculations",q:"A company receives a $10K invoice from a marketing agency (60 days to pay). Walk through both steps. (25% tax rate)",a:"In Step 1, when the invoice is received, Operating Expenses increase by $10,000 on the Income Statement, reducing Pre-Tax Income by $10,000 and Net Income by $7,500. On the Cash Flow Statement, Net Income is down by $7,500, but Accounts Payable increases by $10,000, which is a source of cash, so Cash at the bottom is actually up by $2,500. On the Balance Sheet, Cash is up by $2,500, Accounts Payable is up by $10,000, and Equity is down by $7,500, so both sides balance. In Step 2, when the company pays, there is no Income Statement change, Cash falls by $10,000, and Accounts Payable returns to zero."},
+{cat:"Accounting Calculations",q:"An e-commerce company buys $200 inventory, then sells it for $500. Walk through both steps. (25% tax rate)",a:"In Step 1, when the company buys the inventory for $200, there is no Income Statement change. On the Cash Flow Statement, the Inventory increase of $200 is a use of cash, so Cash falls by $200. On the Balance Sheet, Cash is down by $200 and Inventory is up by $200, so both sides are unchanged in net. In Step 2, when the company sells for $500 with COGS of $200, Revenue increases by $500 and COGS increases by $200 on the Income Statement, leaving Pre-Tax Income up by $300 and Net Income up by $225. On the Cash Flow Statement, Net Income is up by $225 and Inventory decreases by $200, providing an additional $200 source of cash, so Cash is up by $425 in total. On the Balance Sheet, Cash is up by $425, Inventory is down by $200, and Equity is up by $225."},
+{cat:"Accounting Calculations",q:"A SaaS company collects $250 cash upfront Jan 1 for a year of service with $50 delivery costs. Walk through the full year. (25% tax rate)",a:"At the start, Cash increases by $250 and Deferred Revenue increases by $250 as a Liability, with no Income Statement impact. As revenue is recognized evenly throughout the year, Revenue increases by $250, COGS increases by $50, Pre-Tax Income increases by $200, and Net Income increases by $150. On the Cash Flow Statement for the combined period, Net Income is up by $150, the Deferred Revenue decrease is a negative $250 since it was already collected, and Cash receipts from the upfront payment contribute the $250, so the net Cash change is up by $250 minus the $50 cash paid for delivery costs, leaving Cash up by $200. On the Balance Sheet, Cash is up by $200, Deferred Revenue has been fully recognized and is back to zero, and Equity is up by $150."},
+{cat:"Accounting Calculations",q:"A company issues 500 new shares at $1.00 (1000 existing shares), then pays $0.10/share dividend. Walk through both steps.",a:"In Step 1, the equity issuance has no Income Statement impact. On the Cash Flow Statement, Cash increases by $500 under Financing activities. On the Balance Sheet, Cash is up by $500 and Common Shareholders' Equity is up by $500 as well. Equity Value increases by $500, while Enterprise Value stays the same since Cash is a non-operating asset that offsets the new equity. In Step 2, the dividend is paid to all 1,500 shareholders at $0.10 per share, totaling $150. There is no Income Statement impact. Cash decreases by $150 on the Cash Flow Statement, and on the Balance Sheet, Cash is down by $150 and Retained Earnings within Equity is down by $150."},
+{cat:"Accounting Calculations",q:"A company issues $200 Debt at 10%. Walk through the entire first year including interest. (25% tax rate)",a:"For the combined first year, Interest Expense of $20 appears on the Income Statement, reducing Pre-Tax Income by $20 and Net Income by $15 after taxes. On the Cash Flow Statement, Net Income is down by $15, the Debt issuance adds $200 under Financing activities, and Cash is up by $185 in total. On the Balance Sheet, Cash is up by $185, Debt is up by $200, and Equity is down by $15 due to the lower Net Income, so the $200 increase on the Liabilities side is partially offset by the $15 decline in Equity, leaving Total Liabilities and Equity up by $185 to match the Cash increase."},
+{cat:"Accounting Calculations",q:"Same $200 Debt at 10%, but now with 20% annual principal repayment. How does it change?",a:"The Interest Expense remains $20 and the Net Income effect is still down by $15. However, the Cash Flow Statement now includes a principal repayment of $40 under Financing activities, so instead of Cash rising by $185, it rises by only $145. On the Balance Sheet, Cash is up by $145, Debt is up by $160 net (the $200 issuance minus the $40 repayment), and Equity is down by $15, so Total Liabilities and Equity is up by $145, matching the Cash increase."},
+{cat:"Accounting Calculations",q:"Under U.S. GAAP, a 10-year Operating Lease with $160 rent/year and PV of $1,200 at 5% interest. Walk through Year 1.",a:"In Year 1, the interest component equals 5% multiplied by $1,200, which is $60, and the principal repayment equals $160 minus $60, which is $100. On the Income Statement, a Rental Expense of $160 reduces Pre-Tax Income by $160 and Net Income by $120 after taxes. On the Cash Flow Statement, Net Income is down by $120, the Right-of-Use Asset amortization of $100 is added back as a non-cash item, and the Lease Liability principal payment of $100 is shown as a financing outflow, so Cash is down by $120 overall. On the Balance Sheet, Cash is down by $120, the Right-of-Use Asset is down by $100, the Lease Liability is down by $100, and Equity is down by $120."},
+{cat:"Accounting Calculations",q:"Same lease under IFRS (Finance Lease treatment). How does it differ?",a:"Under IFRS, the full treatment is the same as a Finance Lease regardless of classification. On the Income Statement, the $160 rental expense is replaced by Depreciation of $120 (calculated as $1,200 divided by 10 years) and Interest of $60, totaling $180 in charges that reduce Pre-Tax Income by $180 and Net Income by $135. On the Cash Flow Statement, Net Income is down by $135, the $120 Depreciation is added back, and the $100 principal payment appears under Financing activities, so Cash is down by $115. The Balance Sheet effects are similar to the U.S. GAAP operating lease treatment in terms of Asset and Liability reductions, but the Income Statement impact is larger because the total charge is $180 versus $160."},
+{cat:"Accounting Calculations",q:"A company buys a $200 factory with $200 Debt (initial step only).",a:"At the initial step, there is no Income Statement impact. On the Cash Flow Statement, CapEx of $200 appears as an outflow under Investing activities, and the Debt issuance of $200 appears as an inflow under Financing activities, so Cash is unchanged overall. On the Balance Sheet, Net PP&E increases by $200 and Debt increases by $200, so both Total Assets and Total Liabilities and Equity increase by $200 and remain in balance."},
+{cat:"Accounting Calculations",q:"Year 1 of that factory: 10% interest, 10% depreciation, 5% principal repayment. Walk through the full year.",a:"In Year 1, Interest Expense is $20 and Depreciation is $20, so Pre-Tax Income falls by $40, and Net Income falls by $30. On the Cash Flow Statement, Net Income is down by $30, the $20 Depreciation is added back as a non-cash item, and the $10 principal repayment appears as a Financing outflow, so Cash is down by $20. On the Balance Sheet, Cash is down by $20, Net PP&E is down by $20 due to the Depreciation, Debt is down by $10 due to the principal repayment, and Equity is down by $30 due to the Net Income reduction, so both sides of the Balance Sheet are down by $50, keeping Assets equal to Liabilities plus Equity."},
+{cat:"Accounting Calculations",q:"The factory (Net PP&E = $180) sells for $220; remaining Debt = $190 is repaid. Walk through.",a:"The Realized Gain equals $220 minus $180, which is $40. On the Income Statement, Pre-Tax Income increases by $40 and Net Income increases by $30. On the Cash Flow Statement, Net Income is up by $30, the $40 gain is reversed as a non-cash adjustment, cash proceeds of $220 appear under Investing activities, and the $190 Debt repayment appears under Financing activities, leaving Cash up by $20. On the Balance Sheet, Cash is up by $20, Net PP&E is down by $180, Debt is down by $190, and Equity is up by $30, so both sides fall by $160 in net, keeping Assets equal to Liabilities plus Equity."},
+{cat:"Accounting Calculations",q:"Walmart buys $200 inventory on credit (AP), then sells for $400 with $100 OpEx. Walk through Step 1 only. (25% tax rate)",a:"In Step 1, when Walmart buys $200 of inventory on credit, there is no Income Statement impact because nothing has been sold. On the Cash Flow Statement, Inventory increases by $200, which is a use of cash, but Accounts Payable also increases by $200, providing an equal source of cash, so Cash is unchanged. On the Balance Sheet, Inventory is up by $200 on the Assets side, and Accounts Payable is up by $200 on the Liabilities side, so both sides increase by $200 and remain in balance."},
+{cat:"Accounting Calculations",q:"Now walk through Step 2: Walmart sells and pays supplier. (25% tax rate)",a:"In Step 2, Revenue increases by $400, COGS increases by $200, and Operating Expenses increase by $100 on the Income Statement, leaving Pre-Tax Income up by $100 and Net Income up by $75. On the Cash Flow Statement, Net Income is up by $75, Inventory decreases by $200, providing a source of cash, and Accounts Payable decreases by $200, using cash to pay the supplier. Cash receipts from customers add $400 through the Accounts Receivable change or directly if paid in cash, leaving a net Cash increase of $75. On the Balance Sheet, Cash is up by $75 and Equity is up by $75, so both sides balance."},
+
+// ─── EQUITY VALUE & ENTERPRISE VALUE ─────────────────────────
+{cat:"EV & Equity Value",q:"What's the difference between Equity Value and Enterprise Value?",a:"Equity Value, also called Market Capitalization, represents the value of a company attributable only to its common shareholders, calculated as Share Price multiplied by Diluted Shares Outstanding. Enterprise Value, by contrast, represents the value of the entire company to all investor groups, both Debt holders and Equity holders, and is calculated as Equity Value plus Debt plus Preferred Stock plus Minority Interest, minus Cash. The key distinction is that Equity Value reflects what common shareholders own after accounting for all claims, while Enterprise Value reflects the total capital deployed to run the business."},
+{cat:"EV & Equity Value",q:"Why do you subtract cash in the EV formula?",a:"You subtract Cash because an acquirer effectively receives the target's Cash at closing, which reduces their net cost of acquisition. Enterprise Value is designed to represent the operating value of a business on a capital-structure-neutral basis, so it should exclude non-operating assets like Cash that are not contributing to the company's operations. This is why Enterprise Value is sometimes described as the cost to acquire the business and then pay off all its Debt, since you receive the Cash back but must retire the Debt."},
+{cat:"EV & Equity Value",q:"Why add Minority Interest to Enterprise Value?",a:"When a company consolidates a subsidiary it does not fully own, its financial statements include 100% of that subsidiary's revenue, EBITDA, and other metrics, even if the company owns only, say, 80% of it. Since Enterprise Value-based multiples like EV divided by EBITDA use figures that include the full subsidiary contribution, the Enterprise Value in the numerator must also reflect the full value of the subsidiary. Adding the Minority Interest, which represents the 20% owned by outside shareholders, ensures consistency between the numerator and denominator of the multiple."},
+{cat:"EV & Equity Value",q:"Can Enterprise Value be negative? When?",a:"Yes, Enterprise Value can be negative if Cash exceeds the sum of Equity Value and total Debt. This situation can arise when a company holds massive cash balances relative to its market capitalization, or when the market prices the company at nearly zero because it expects large future losses or liabilities. In practice, a negative Enterprise Value usually signals either a deeply distressed situation, a special situation such as a holding company discount, or a data error that should be investigated before drawing conclusions."},
+{cat:"EV & Equity Value",q:"Why use Equity Value-based multiples (P/E) vs. EV-based multiples (EV/EBITDA)?",a:"The rule is that if the financial metric in the denominator deducts Net Interest Expense, you should pair it with Equity Value; if it does not deduct Net Interest Expense, you should pair it with Enterprise Value. Net Income and EPS already reflect interest costs, so they are paired with Equity Value to produce Price-to-Earnings and similar multiples. EBITDA, EBIT, and Revenue do not deduct interest, so they are paired with Enterprise Value. Using a mismatched combination, such as EV divided by Net Income or Price divided by EBITDA, would create a capital structure mismatch and produce a misleading result."},
+
+// ─── EV CALCULATIONS ─────────────────────────────────────────
+{cat:"EV Calculations",q:"A company issues $200 of Common Shares. How do Equity Value and Enterprise Value change?",a:"When a company issues $200 of Common Shares, Common Shareholders' Equity increases by $200, so Equity Value increases by $200. However, the proceeds go into Cash, which is a non-operating asset that is subtracted in the Enterprise Value formula. Since Net Operating Assets do not change, Enterprise Value remains unchanged. The increase in Equity Value is exactly offset by the increase in Cash in the Enterprise Value calculation."},
+{cat:"EV Calculations",q:"That same company uses the $200 to acquire a business for $100 (holds $100 cash).",a:"When the company uses $200 of equity proceeds to acquire a business for $100 while retaining $100 in Cash, Equity Value remains up by the original $200 since Common Shareholders' Equity is still higher. Of the $200 in Cash, $100 remains as non-operating Cash and $100 is converted into operating assets through the acquisition, so Net Operating Assets increase by $100. As a result, Enterprise Value increases by $100, reflecting the $100 of new operating assets added to the business."},
+{cat:"EV Calculations",q:"A company issues $100 of Debt to purchase a factory. How do EV and Equity Value change?",a:"When a company issues $100 of Debt and uses it to buy a factory, Common Shareholders' Equity is unchanged, so Equity Value is unchanged. However, the Debt of $100 is added to Enterprise Value and the factory, which is an operating asset, increases Net Operating Assets by $100. The $100 increase from the Debt in the EV formula is exactly offset by the $100 increase in Net Operating Assets, so Enterprise Value also remains unchanged. The transaction simply converts financing into an operating asset without creating or destroying value."},
+{cat:"EV Calculations",q:"A company issues $100 Common + $100 Preferred, both proceeds sit in cash. How do EV and Equity Value change?",a:"The Common Share issuance increases Common Shareholders' Equity by $100, so Equity Value increases by $100. The Preferred Stock issuance does not affect Common Shareholders' Equity, but Preferred Stock is added to Enterprise Value. Both the Common and Preferred proceeds sit in Cash, which is non-operating and subtracted from Enterprise Value. Since the Preferred Stock addition to EV is exactly offset by the Cash increase in non-operating assets, Enterprise Value is unchanged. Equity Value increases by $100 from the Common issuance only."},
+{cat:"EV Calculations",q:"A company pays $10 Common Dividends + $10 Preferred Dividends. How do EV and Equity Value change?",a:"Both Common and Preferred Dividends flow through and reduce Common Shareholders' Equity on the Balance Sheet, so Equity Value decreases by $20 in total. On the Enterprise Value side, Cash decreases by $20 as it is paid out, which would normally increase Enterprise Value by $20 since less Cash is subtracted. However, Net Operating Assets are unchanged, so Enterprise Value remains the same. The $20 reduction in Equity Value combined with the $20 reduction in Cash leaves Enterprise Value flat."},
+{cat:"EV Calculations",q:"A company issues $150 Debt + $50 Common Stock to buy $175 PP&E + $25 Short-Term Investments.",a:"The Common Stock issuance of $50 increases Common Shareholders' Equity by $50, so Equity Value increases by $50. PP&E is an operating asset and increases Net Operating Assets by $175, while Short-Term Investments are non-operating and do not affect Net Operating Assets. Debt of $150 is added to Enterprise Value. Since the $150 Debt addition and $175 PP&E increase in Net Operating Assets together cause Enterprise Value to increase by $175, but the Short-Term Investments of $25 are non-operating assets that reduce the EV calculation, Enterprise Value increases by $150 net. Equity Value increases by $50 from the Common issuance."},
+{cat:"EV Calculations",q:"A company buys $100 of inventory with cash. How do EV and Equity Value change?",a:"When a company buys $100 of inventory with cash, there is no Income Statement impact, so Common Shareholders' Equity is unchanged and Equity Value stays the same. On the Enterprise Value side, Cash decreases by $100, which would normally increase EV since less Cash is subtracted, but Inventory is an operating asset that increases Net Operating Assets by $100. These two effects cancel each other out, so Enterprise Value is also unchanged. The transaction simply moves value from non-operating Cash to operating Inventory."},
+{cat:"EV Calculations",q:"That inventory then sells for $200 (COGS $100). How does the entire process affect EV and Equity Value?",a:"When the inventory is sold for $200 with COGS of $100, Revenue increases by $200 and COGS increases by $100 on the Income Statement, increasing Net Income by $75 after a 25% tax rate. Net Income flows into Common Shareholders' Equity, increasing Equity Value by $75. Cash increases by $200 from the sale proceeds, which is non-operating, but Inventory decreases by $100 as an operating asset. The $200 Cash increase minus the $100 Inventory decrease leaves non-operating assets up by $100, which reduces Enterprise Value by $100. Combined with the Net Operating Assets decreasing from the Inventory reduction, Enterprise Value remains unchanged while Equity Value increases by $75."},
+{cat:"EV Calculations",q:"A company has 200 shares at $10, plus 50 options at $8 exercise price. What is Diluted Equity Value?",a:"Basic Equity Value equals 200 shares multiplied by $10, which is $2,000. The options are in-the-money since the exercise price of $8 is below the current share price of $10. Using the Treasury Stock Method, the 50 options generate $400 in proceeds at the $8 exercise price, which the company uses to repurchase 40 shares at the current $10 price. This results in a net increase of 10 shares (50 new shares minus 40 repurchased), so Diluted Shares Outstanding becomes 210. Diluted Equity Value equals 210 multiplied by $10, which is $2,100."},
+{cat:"EV Calculations",q:"A company has 10,000 shares at $20, plus 100 options at $10, 50 RSUs, and 100 convertible bonds at $10 par, convertible at $10/share.",a:"For the options, using the Treasury Stock Method, 100 new shares are issued and the $1,000 in proceeds repurchases 50 shares at $20, adding a net 50 shares. The 50 RSUs vest and add 50 shares directly. The convertible bonds convert $1,000 of par value into 100 shares at the $10 conversion price. Diluted Shares Outstanding becomes 10,000 plus 50 plus 50 plus 100, which equals 10,200 shares. Diluted Equity Value equals 10,200 multiplied by $20, which is $204,000. For the Enterprise Value calculation, you would also remove the convertible bonds from the Debt component since they have converted into equity."},
+
+// ─── VALUATION ────────────────────────────────────────────────
+{cat:"Valuation",q:"What are the three main valuation methodologies and when do you use each?",a:"The three main methodologies are the Discounted Cash Flow analysis, Public Comparable Companies, and Precedent Transactions. A DCF values a company based on the present value of its future cash flows and is best for stable, predictable businesses with visible long-term projections, though it is highly sensitive to assumptions. Public Comparable Companies values a company by applying market multiples from similar publicly traded peers, and is useful as a market-based reality check. Precedent Transactions values a company based on multiples paid in prior acquisitions of similar businesses, and reflects control premiums, making it most relevant when evaluating an M&A transaction."},
+{cat:"Valuation",q:"Which methodology typically produces the highest values?",a:"Precedent Transactions tend to produce the highest values because they include a control premium, which typically ranges from 20 to 30 percent or more above the target's standalone trading price. Buyers pay this premium to acquire control of a business and capture synergies. The DCF can produce either the highest or the lowest values depending on the assumptions used, particularly the Terminal Value and WACC, which is why bankers always present a range of values from each methodology rather than a single number."},
+{cat:"Valuation",q:"What is a 'football field chart'?",a:"A football field chart is a horizontal bar chart that presents the valuation range produced by each methodology side by side, allowing readers to compare the ranges visually. It typically shows the low and high end of each range, often including sensitivities on key assumptions such as WACC for the DCF or the multiple range for comparable companies. The chart is commonly used in fairness opinions, pitch books, and board presentations to show where the proposed transaction price sits relative to the range of reasonable values."},
+{cat:"Valuation",q:"How do you select comparable public companies?",a:"You start by screening for companies in the same industry or sub-sector, then filter by revenue and EBITDA size, geography, business model, growth profile, and margins. The goal is to find companies that a reasonable investor would consider close substitutes when making investment decisions. In practice, there are rarely more than five to ten truly comparable companies for any given subject, so you sometimes need to expand the criteria or include companies from adjacent sectors. You then calculate key metrics such as EV divided by EBITDA and Price divided by Earnings for each peer and apply the median or range of those multiples to the subject company."},
+{cat:"Valuation",q:"Walk me through how to use Public Comps and Precedent Transactions in a valuation.",a:"For Public Comparable Companies, you select a peer group, calculate key financial metrics for the current period and forward estimates, and determine the relevant multiples such as EV divided by EBITDA and Price divided by Earnings for each company. You then apply the median or selected range of those multiples to the subject company's corresponding metrics to derive an implied valuation range. For Precedent Transactions, you follow a similar process using prior deals rather than public companies, but you apply a premium to reflect the control premium typically paid in acquisitions and adjust for any differences in deal terms or market conditions at the time of those transactions."},
+{cat:"Valuation",q:"Why might a healthcare company trade at higher multiples than an industrials company?",a:"Healthcare companies often trade at higher multiples because they tend to have more predictable, recurring revenue streams from products like medical devices or pharmaceuticals, lower capital intensity compared to heavy manufacturing, and less sensitivity to economic cycles since demand for healthcare services persists regardless of the economy. In addition, some healthcare sub-sectors, such as specialty pharmaceuticals or medical technology, offer high growth prospects driven by demographic trends and innovation, which justifies higher multiples in the framework of the Gordon Growth Model. Industrial companies, by contrast, often have more cyclical revenues, higher capital requirements, and lower margins, which results in lower multiples."},
+{cat:"Valuation",q:"What is a Liquidation Valuation and when is it useful?",a:"A Liquidation Valuation estimates a company's value by determining the market value of all its assets if sold individually, adding them up, and then subtracting all liabilities to arrive at an Implied Equity Value. It is most useful for distressed companies or those in bankruptcy proceedings where the going-concern value may be questionable, as well as for asset-heavy businesses like real estate where individual assets have clear market values. The Liquidation Valuation typically produces the lowest valuation of all methodologies because it ignores the going-concern premium and the value of intangible assets that are not easily sold separately."},
+{cat:"Valuation",q:"How does a Dividend Discount Model (DDM) differ from a DCF?",a:"Instead of projecting Free Cash Flow, a DDM projects Dividends per share or as a percentage of Net Income and discounts them at the Cost of Equity rather than WACC. The Terminal Value is calculated using equity-based multiples such as Price divided by Earnings, and the output is the Implied Equity Value directly without needing a bridge from Enterprise Value. The DDM is most useful for banks, insurance companies, and utility companies that pay regular, predictable dividends, since these companies' Free Cash Flow is difficult to measure due to their intermingling of financing and operating activities."},
+{cat:"Valuation",q:"What is a Sum-of-the-Parts (SOTP) valuation?",a:"A Sum-of-the-Parts valuation values each business division of a company separately using its own set of comparable companies, precedent transactions, and DCF analysis, and then adds the individual values together to arrive at a total company value. This approach is most appropriate for conglomerates or diversified companies whose divisions operate in very different industries with different risk profiles and growth rates that cannot be captured by a single set of multiples. The main limitation is that it is data-intensive and often difficult to execute because companies may not disclose separate financial data for each division, and allocating corporate overhead across divisions involves judgment."},
+{cat:"Valuation",q:"What is an LBO valuation and when is it useful?",a:"An LBO valuation works by building an LBO model where a private equity firm acquires the company using Debt and Equity, operates it for several years, and then sells it. By targeting a specific IRR, typically 20 percent or more, and working backwards, you can determine the maximum price the PE firm would be willing to pay to achieve that return, which is referred to as the LBO floor valuation. This methodology is most useful for screening potential LBO candidates, for helping a company understand what a financial buyer might pay versus a strategic acquirer, and for establishing the floor of a valuation range in an M&A context."},
+
+// ─── VALUATION METRICS & MULTIPLES ───────────────────────────
+{cat:"Valuation Metrics",q:"What is a valuation multiple conceptually?",a:"A valuation multiple is shorthand for the relationship between a company's value and a key financial metric, and it reflects the market's expectations for growth and risk. Conceptually, it follows from the formula that Company Value equals Cash Flow divided by (Discount Rate minus Growth Rate). For example, a 10x EBITDA multiple implies that the market is pricing in a specific combination of future growth and risk for that company. Just as price per square foot in real estate allows you to compare properties of different sizes, multiples allow you to compare companies of different sizes on a normalized basis."},
+{cat:"Valuation Metrics",q:"A company's TEV/EBITDA is 15x vs. median comps of 10x. What's the most likely explanation?",a:"The most likely explanation is that the market expects faster cash flow growth for this company relative to its peers. A higher expected growth rate increases the denominator in the Gordon Growth-derived multiple formula, producing a higher multiple. Differences in the Discount Rate are a less likely explanation if the companies are in the same industry and of similar size, since those factors tend to be similar across peers. Other possible explanations include near-term catalysts such as a pending acquisition or a new product launch, but the default answer should always start with higher expected growth."},
+{cat:"Valuation Metrics",q:"How do you calculate EBIT and EBITDA for a public company?",a:"To calculate EBIT, you start with Operating Income from the Income Statement and add back any non-recurring charges that reduced it, such as restructuring costs or asset write-downs, to arrive at a normalized figure. To calculate EBITDA, you start with EBIT and then add back Depreciation and Amortization from the Cash Flow Statement, since these non-cash charges are often embedded within Cost of Goods Sold or SG&A on the Income Statement rather than shown as a separate line item."},
+{cat:"Valuation Metrics",q:"When do you use Equity Value vs. Enterprise Value in a multiple?",a:"The rule is straightforward: if the financial metric in the denominator already deducts Net Interest Expense, you pair it with Equity Value, and if it does not, you pair it with Enterprise Value. Net Income and Earnings per Share already reflect interest costs, so they are paired with Equity Value to produce Price-to-Earnings multiples. EBIT, EBITDA, and Revenue do not deduct interest, so they are paired with Enterprise Value. Using a mismatched combination, such as Enterprise Value divided by Net Income or Price divided by EBITDA, creates a capital structure mismatch that makes the resulting multiple meaningless."},
+{cat:"Valuation Metrics",q:"A company has $100 Revenue, 15% EBIT margin, 5% D&A/Revenue. Equity Value = $100, Cash = $20, Debt = $40. What is TEV/EBITDA?",a:"EBITDA equals Revenue of $100 multiplied by the EBIT margin of 15%, giving $15 of EBIT, plus D&A of $5 (5% of $100), for a total EBITDA of $20. Enterprise Value equals Equity Value of $100 plus Debt of $40 minus Cash of $20, which equals $120. TEV divided by EBITDA therefore equals $120 divided by $20, or 6x. Note that the treatment of lease liabilities would depend on whether the company follows U.S. GAAP or IFRS, which is worth clarifying with the interviewer."},
+{cat:"Valuation Metrics",q:"Why should you use both historical and projected metrics in comps?",a:"Historical metrics are based on actual reported results, which makes them reliable, but they can be distorted by one-time items, acquisitions, or unusual market conditions in a particular period. Projected metrics reflect steady-state expectations for the company going forward, making them more useful for valuation purposes, but they depend on analyst estimates that may be wrong. Using both historical metrics such as Last Twelve Months and forward metrics such as Next Twelve Months gives you a more complete picture and allows you to triangulate a more reliable valuation range."},
+{cat:"Valuation Metrics",q:"When calculating forward multiples for comps, should you project Equity Value or EV forward?",a:"You should never project Enterprise Value or Equity Value forward when calculating forward multiples. Instead, you always use the current Equity Value and Enterprise Value in the numerator because a company's current share price already incorporates the market's expectations for future performance. Projecting the Enterprise Value or Equity Value forward would require you to forecast future market expectations, which effectively amounts to predicting what the market will think in the future. The correct approach is to keep the current market values in the numerator and apply them to projected financial metrics in the denominator."},
+
+// ─── DCF ──────────────────────────────────────────────────────
+{cat:"DCF",q:"Why do you build a DCF?",a:"In theory, a company's value equals the present value of all its future cash flows. However, because growth rates and discount rates change over time, you cannot use a single perpetuity formula for the entire valuation. A DCF solves this by dividing the analysis into an explicit forecast period, typically five to ten years, where assumptions can vary each year, and a Terminal Period where assumptions stabilize. You discount all projected cash flows back to today at the appropriate rate and sum them to arrive at the Implied Enterprise Value."},
+{cat:"DCF",q:"Walk me through a DCF analysis.",a:"In Step 1, you project Unlevered Free Cash Flow for five to ten years using the formula EBIT multiplied by (1 minus the Tax Rate) plus Depreciation and Amortization, minus the Change in Working Capital, minus Capital Expenditures. In Step 2, you estimate the Terminal Value using either the Exit Multiple Method or the Gordon Growth Method. In Step 3, you discount all cash flows, including the Terminal Value, back to today at WACC. In Step 4, you sum the Present Values of all cash flows to arrive at the Implied Enterprise Value. Finally, in Step 5, you add Cash and subtract Debt to bridge from Enterprise Value to Equity Value, and then divide by diluted shares to get the Implied Share Price."},
+{cat:"DCF",q:"How do you calculate Unlevered Free Cash Flow (UFCF)?",a:"Unlevered Free Cash Flow, also called Free Cash Flow to the Firm, is calculated as EBIT multiplied by (1 minus the Tax Rate), plus Depreciation and Amortization, minus Capital Expenditures, minus the Change in Working Capital. The term 'unlevered' means that the calculation is performed before interest expense, so it ignores the company's capital structure entirely. This is why it is discounted at WACC, which incorporates the returns required by all capital providers, rather than at the Cost of Equity alone."},
+{cat:"DCF",q:"How do you calculate Terminal Value and which method is better?",a:"The Gordon Growth Method calculates Terminal Value as the final year's Free Cash Flow multiplied by (1 plus the long-term growth rate), divided by (WACC minus the long-term growth rate), where the growth rate is typically set close to nominal GDP growth of 1.5 to 3 percent. The Exit Multiple Method calculates Terminal Value as the final year's EBITDA multiplied by an exit multiple derived from current comparable company multiples. Both methods should produce similar values when applied consistently, and if they differ significantly it usually indicates an inconsistency in the assumptions. Neither is universally better, so practitioners typically use both and cross-check the results."},
+{cat:"DCF",q:"What happens to DCF value if WACC increases?",a:"When WACC increases, DCF value decreases because future cash flows are discounted more heavily, making them worth less in today's dollars. The impact is especially pronounced on the Terminal Value, which represents cash flows far in the future and is therefore highly sensitive to the discount rate. In practice, a one percentage point increase in WACC can reduce the Enterprise Value by 15 to 30 percent or more in a typical DCF, which is why WACC is one of the most important and most carefully estimated inputs in the analysis."},
+{cat:"DCF",q:"How large is Terminal Value typically as a % of total DCF value?",a:"Terminal Value typically represents 60 to 80 percent or more of the total DCF value in most analyses. This is why the Terminal Value assumptions, including the exit multiple or long-term growth rate, are so critical to the overall result. A small change in the Terminal Value assumptions can swing the total valuation significantly, which is also why critics sometimes describe DCF analyses as 'garbage in, garbage out.' Best practice is to always perform a sensitivity analysis on these key Terminal Value assumptions alongside the WACC."},
+{cat:"DCF",q:"What are the biggest weaknesses of a DCF?",a:"The DCF is highly sensitive to its key assumptions, particularly the Terminal Value, which often accounts for 75 percent or more of the total value, meaning the entire analysis effectively hinges on what happens in the last projected year. WACC is also difficult to estimate precisely, as it depends on subjective inputs like Beta and the equity risk premium. Additionally, the DCF ignores market sentiment and current trading conditions, which means it can produce values that are very different from what the market is willing to pay at a given moment. For these reasons, the DCF is best used alongside comparable companies and precedent transactions, and always with a sensitivity analysis."},
+{cat:"DCF",q:"What is a sensitivity analysis in a DCF?",a:"A sensitivity analysis is a table showing how the Implied Enterprise Value or Share Price changes as you vary two key assumptions simultaneously, typically WACC on one axis and the Terminal Value growth rate or exit multiple on the other. The output is typically a five-by-five or similar grid of values that communicates the range of reasonable outcomes under different scenarios. Sensitivity analysis is important because it acknowledges the uncertainty in DCF assumptions and helps identify which inputs drive the most value, so that both the analyst and the decision-maker understand where the model is most and least reliable."},
+
+// ─── DCF DISCOUNT RATE ────────────────────────────────────────
+{cat:"DCF – Discount Rate",q:"What does the Cost of Equity mean intuitively?",a:"The Cost of Equity represents the average annualized return that a company's stock should theoretically return to shareholders, combining both price appreciation and dividends. From the company's perspective, it is the cost of funding its operations by issuing new equity, since the company effectively 'pays' equity investors through potential share price appreciation and dividends. It is higher than the Cost of Debt because equity investors take on more risk: they have a residual claim on the company's assets and earnings, meaning they get paid only after all Debt holders are satisfied."},
+{cat:"DCF – Discount Rate",q:"How do you calculate the Cost of Equity?",a:"The Cost of Equity is most commonly calculated using the Capital Asset Pricing Model, or CAPM, where Cost of Equity equals the Risk-Free Rate plus Beta multiplied by the Equity Risk Premium. The Risk-Free Rate is typically the yield on a 10-year government bond in the relevant currency. Beta measures the stock's volatility relative to the overall market and reflects both the company's business risk and its financial leverage. The Equity Risk Premium represents the additional return investors expect from equities over the risk-free rate, typically estimated at 5 to 7 percent."},
+{cat:"DCF – Discount Rate",q:"What does Beta mean intuitively, and what is Unlevered Beta?",a:"Levered Beta measures a stock's volatility relative to the overall market, incorporating both the company's underlying business risk and the additional risk created by financial leverage. A Beta of 1.0 means the stock moves in line with the market, while a Beta of 2.0 means the stock tends to move twice as much as the market in either direction. Unlevered Beta, by contrast, removes the effect of financial leverage and reflects only the intrinsic business risk of the company's operations. It is always lower than or equal to the Levered Beta, and it is useful when comparing the business risk of companies with different capital structures."},
+{cat:"DCF – Discount Rate",q:"What are the formulas for un-levering and re-levering Beta?",a:"To unlever Beta, you divide the Levered Beta by the quantity (1 plus Debt divided by Equity multiplied by (1 minus the tax rate), plus Preferred Stock divided by Equity). To relever Beta, you multiply the Unlevered Beta by that same quantity. The (1 minus tax rate) factor is applied to the Debt component because the tax-deductibility of interest reduces the marginal risk that Debt adds to equity holders. These formulas are used when estimating the Beta for a private company or a division, where you take the Unlevered Betas from comparable public companies and then relever using the target's own capital structure."},
+{cat:"DCF – Discount Rate",q:"How do you calculate WACC step by step?",a:"First, calculate the Cost of Equity using the CAPM formula: Risk-Free Rate plus Beta multiplied by the Equity Risk Premium. Second, calculate the after-tax Cost of Debt by multiplying the yield on the company's bonds or its effective interest rate by (1 minus the tax rate). Third, determine the capital structure weights using the market value of Equity and the book value of Debt, since book value is typically a better proxy for market value for Debt. Finally, calculate WACC as the weight of Equity multiplied by the Cost of Equity, plus the weight of Debt multiplied by the after-tax Cost of Debt. If Preferred Stock is present, include it similarly."},
+{cat:"DCF – Discount Rate",q:"Why is Debt cheaper than Equity?",a:"Debt is cheaper than Equity for two main reasons. First, Debt holders have senior claims in bankruptcy and therefore face less risk than equity holders, which means they require a lower return. Second, interest payments on Debt are tax-deductible, which reduces the effective after-tax cost of Debt to the company. Equity investors have no comparable tax shield. This is why adding a reasonable amount of Debt to a company's capital structure typically lowers the WACC and increases firm value, at least up to the point where financial distress costs begin to outweigh the tax benefits."},
+{cat:"DCF – Discount Rate",q:"What risk-free rate do you use for a multinational company?",a:"You should use the government bond yield in the currency in which the company's cash flows are denominated. If the company reports in US dollars and generates primarily US-dollar cash flows, you would use the 10-year US Treasury yield. If the company reports in Euros, you would use the 10-year Eurozone government bond yield, and if it reports in British Pounds, you would use the 10-year UK Gilt yield. The key principle is that the currency of the DCF determines the appropriate risk-free rate, ensuring consistency between the discount rate and the cash flows being discounted."},
+
+// ─── MERGER MODELS – CONCEPTS ────────────────────────────────
+{cat:"Merger Models",q:"Walk me through a merger model (accretion/dilution analysis).",a:"In Step 1, you project the standalone financials for both the Buyer and the Seller. In Step 2, you estimate the Purchase Price and the funding mix, which could include Cash, Debt, and Stock, and build a Sources and Uses schedule along with a Purchase Price Allocation to determine Goodwill and other intangible write-ups. In Step 3, you combine the Balance Sheets of both companies. In Step 4, you combine the Income Statements, making adjustments for foregone interest on Cash used, new interest expense on Debt raised, incremental Depreciation and Amortization from the Purchase Price Allocation, and any cost or revenue synergies. Finally, in Step 5, you compare the Combined Company's Earnings per Share to the Buyer's standalone Earnings per Share to determine whether the deal is accretive or dilutive."},
+{cat:"Merger Models",q:"What makes a deal accretive or dilutive?",a:"A deal is accretive if the Seller's contribution to the combined company's Pre-Tax Income exceeds the total cost of acquiring it, including interest on new Debt, foregone interest on Cash used, and dilution from any new Shares issued. More precisely, a deal is accretive when the Seller's earnings yield, calculated as Net Income divided by the Purchase Equity Value, exceeds the weighted average cost of acquisition. If the cost of acquisition is higher than the earnings yield, the deal reduces the Buyer's Earnings per Share and is therefore dilutive."},
+{cat:"Merger Models",q:"How do you quickly tell if a deal will be accretive or dilutive?",a:"The quick test is to compare the Seller's Purchase Earnings Yield to the Weighted Cost of Acquisition. The Weighted Cost of Acquisition equals the percentage funded by Cash multiplied by the after-tax Cash opportunity cost, plus the percentage funded by Debt multiplied by the after-tax interest rate, plus the percentage funded by Stock multiplied by the reciprocal of the Buyer's Price-to-Earnings ratio. If the Seller's Purchase Yield exceeds this Weighted Cost, the deal is accretive; if it is lower, the deal is dilutive. For a 100 percent stock deal, the shortcut is simply to compare the Buyer's P/E to the Seller's purchase P/E: if the Buyer's is higher, the deal is accretive."},
+{cat:"Merger Models",q:"What is Purchase Price Allocation (PPA)?",a:"Under ASC 805 in the US and IFRS 3 internationally, when a company is acquired, the purchase price must be allocated to all of the target's identifiable assets and liabilities at their fair values. Assets that are written up to fair value, such as PP&E or intangible assets like customer relationships and patents, generate additional Depreciation and Amortization on the Income Statement going forward, which reduces Net Income. Any excess of the purchase price above the fair value of identifiable net assets is recorded as Goodwill. This write-up of assets is why acquisitions often reduce combined Earnings per Share in the short term, even when the deal is strategically sound."},
+{cat:"Merger Models",q:"What are synergies and how do you model them?",a:"Synergies are financial benefits that arise from combining two companies and that would not be achievable by either company on a standalone basis. Cost synergies, which are more reliable and easier to quantify, typically include headcount reductions, facility consolidations, and procurement savings from increased purchasing power. Revenue synergies, which are less reliable, might include cross-selling opportunities, access to new markets, or improved pricing power. In modeling synergies, you typically phase them in over two to three years to reflect execution risk, and it is common practice to apply a discount of 20 to 30 percent to the announced synergy numbers to account for the likelihood that not all benefits will be realized."},
+{cat:"Merger Models",q:"What is the difference between a cash deal and a stock deal in M&A?",a:"In a cash deal, the buyer pays with cash or newly raised Debt, which results in a clean and simple transaction that is taxable to the seller's shareholders, and the buyer takes on all the risk of future performance since the seller's shareholders exit entirely. In a stock deal, the buyer issues new shares to the seller's shareholders, who then become shareholders of the combined company and share in the future upside or downside. A stock deal can be structured as a tax-free reorganization under Section 368 of the US tax code. The key differences for the Income Statement are that cash and debt deals create additional interest expense, while stock deals create share count dilution that reduces Earnings per Share."},
+
+// ─── MERGER CALCULATIONS ──────────────────────────────────────
+{cat:"Merger Calculations",q:"Company A (10 shares, $25 price, $10 NI) acquires Company B (Purchase Eq Val $150, NI $10) in a 100% stock deal. How accretive?",a:"Company A's standalone Earnings per Share equals $10 divided by 10 shares, or $1.00. To fund the $150 purchase price with stock at $25 per share, Company A issues 6 new shares, bringing Diluted Shares Outstanding to 16. Combined Net Income equals $10 plus $10, or $20, assuming no cash or debt is used and tax rates are identical. Combined Earnings per Share therefore equals $20 divided by 16, or $1.25. The deal is 25 percent accretive, calculated as ($1.25 minus $1.00) divided by $1.00."},
+{cat:"Merger Calculations",q:"Same deal, but 100% Cash (4% rate) or 100% Debt (10% rate). Accretive or dilutive? (25% tax, purchase P/E = 15x)",a:"The Seller's Purchase Yield equals Net Income of $10 divided by Purchase Equity Value of $150, which is 6.7 percent. For the 100 percent Cash deal, the after-tax Cash cost equals 4 percent multiplied by 75 percent, or 3 percent. Since 3 percent is less than 6.7 percent, the Cash deal is accretive. For the 100 percent Debt deal, the after-tax Debt cost equals 10 percent multiplied by 75 percent, or 7.5 percent. Since 7.5 percent exceeds 6.7 percent, the Debt deal is dilutive. The threshold for accretion is whether the cost of financing is lower than the earnings yield of what you are buying."},
+{cat:"Merger Calculations",q:"Company A (P/E 11x, Debt rate 8%, Cash rate 4%, 25% tax) acquires Company B (purchase P/E 20x) using 1/3 each Stock/Debt/Cash. Accretive?",a:"The Cost of Stock equals 1 divided by 11, or 9.1 percent. The after-tax Cost of Debt equals 8 percent multiplied by 75 percent, or 6 percent. The after-tax Cost of Cash equals 4 percent multiplied by 75 percent, or 3 percent. The Weighted Cost of Acquisition equals (9.1 percent plus 6 percent plus 3 percent) divided by 3, or 6.0 percent. The Seller's Purchase Yield equals 1 divided by 20, or 5 percent. Since the Weighted Cost of 6 percent exceeds the Seller's Yield of 5 percent, the deal is dilutive."},
+{cat:"Merger Calculations",q:"Company A (P/E 20x) acquires Company B (purchase P/E 10x) with 100% Debt. At what Debt rate does the deal become dilutive? (25% tax)",a:"The Seller's Purchase Yield equals 1 divided by 10, or 10 percent. For the deal to become dilutive, the after-tax Debt cost must exceed this 10 percent threshold. Since the after-tax Debt cost equals the pre-tax rate multiplied by (1 minus 25%), you solve for the pre-tax rate as 10 percent divided by 75 percent, which equals approximately 13.3 percent. Therefore, any Debt interest rate above roughly 13 percent would make this acquisition dilutive, even though Company A's P/E is twice as high as the purchase P/E."},
+
+// ─── LBO MODELS – CONCEPTS ───────────────────────────────────
+{cat:"LBO Models",q:"What is a leveraged buyout and why does it work?",a:"In a leveraged buyout, a private equity firm acquires a company using a combination of Debt and Equity, operates it for several years, and then sells the company to realize a return on its investment. During the ownership period, the PE firm uses the company's cash flows to pay for the interest expense on the Debt and to repay the Debt principal. LBOs work because leverage amplifies returns: if the deal performs well, the PE firm realizes higher returns than if it had bought the company with 100 percent Equity. However, leverage also presents risks because the returns will be even worse if the deal does not perform well."},
+{cat:"LBO Models",q:"What makes a good LBO candidate?",a:"Almost any deal can work at the right price, but assuming the price is reasonable, ideal LBO candidates should have stable and predictable cash flows so they can service and repay Debt, relatively modest requirements for Capital Expenditures and ongoing reinvestment, and an industry that is at least modestly fragmented to enable add-on acquisitions. Strong management teams, a solid asset base to use as collateral, opportunities to cut costs and improve margins, and realistic exit paths driven by varied return sources such as EBITDA growth and Debt repayment rather than reliance on multiple expansion are also important characteristics."},
+{cat:"LBO Models",q:"Walk me through a basic LBO model.",a:"In Step 1, you make assumptions for the Purchase Price, Debt and Equity split, interest rate on Debt, and other drivers such as revenue growth and margins. In Step 2, you create a Sources and Uses schedule to show how much Investor Equity the PE firm contributes and how transaction fees and the company's existing Cash affect that contribution. In Step 3, you project the Income Statement and partial Cash Flow Statement down to Free Cash Flow. In Step 4, you use Free Cash Flow, Beginning Cash, and Minimum Cash to determine how much Debt principal the company can repay each year, and link the Interest Expense on the changing Debt balance back to the Income Statement. Finally, in Step 5, you calculate the exit proceeds based on an assumed EBITDA Exit Multiple, and compute the IRR and Money-on-Money multiple by comparing those exit proceeds to the initial Investor Equity."},
+{cat:"LBO Models",q:"Which assumptions impact LBO returns the most?",a:"The Purchase Price and Exit assumptions, usually expressed as EBITDA multiples, have the greatest impact on LBO returns, because a lower purchase multiple and a higher exit multiple both directly increase the equity proceeds. After those, the amount of Debt used relative to the purchase price makes the biggest difference, since more leverage amplifies returns in a well-performing deal and magnifies losses in a poor one. The company's revenue growth, EBITDA margins, and cash flow profile also matter significantly because they drive both the exit proceeds and the amount of Debt repaid during the holding period. Interest rates and specific Debt terms are the least impactful of the main drivers."},
+{cat:"LBO Models",q:"What are the main drivers of LBO returns?",a:"The three main drivers of LBO returns are leverage and Debt paydown, EBITDA growth, and multiple expansion or compression. Leverage amplifies equity returns because the company's cash flows are used to pay down Debt, which increases the equity value even if the overall Enterprise Value stays flat. EBITDA growth through operational improvements drives a higher exit Enterprise Value. Multiple expansion, where the company is sold at a higher multiple than it was purchased, can add significant value but is considered less reliable to target deliberately. In practice, EBITDA growth and Debt repayment tend to be the most significant and controllable return drivers."},
+{cat:"LBO Models",q:"What is a 'dividend recap'?",a:"A dividend recapitalization, or dividend recap, occurs after a leveraged buyout when the private equity firm has the portfolio company issue additional Debt and uses the proceeds to pay itself a special dividend, returning capital to the PE firm before a full exit from the investment. This allows the PE firm to realize some return earlier without selling the company, which can significantly boost its IRR even if the ultimate exit valuation is unchanged. However, a dividend recap increases the company's leverage and financial risk, and it is often viewed critically by lenders and other stakeholders because it extracts value from the company without contributing to its operations."},
+
+// ─── LBO CALCULATIONS ─────────────────────────────────────────
+{cat:"LBO Calculations",q:"IRR rule of thumb: what MoM multiples correspond to which approximate IRRs over 5 years?",a:"The standard rules of thumb to memorize are that a 2x multiple in three years corresponds to approximately a 26 percent IRR, a 2x multiple in five years corresponds to approximately 15 percent, a 3x multiple in three years corresponds to approximately 44 percent, and a 3x multiple in five years corresponds to approximately 25 percent. For multiples or time periods in between these benchmarks, you can interpolate. The key intuition is that the same Money-on-Money multiple achieved over a shorter period produces a higher IRR, because the time value of money means that receiving the same return earlier is more valuable."},
+{cat:"LBO Calculations",q:"PE buys $100M EBITDA company at 10x, 60% Debt. EBITDA grows to $150M in 5 years, exit at 9x, Debt repaid $250M. What's the IRR?",a:"The initial Equity contribution equals $1,000M multiplied by 40 percent, which is $400M. The Exit Enterprise Value equals $150M multiplied by 9x, or $1,350M. The initial Debt was $600M and $250M was repaid, leaving $350M of Debt remaining at exit. Equity Proceeds equal $1,350M minus $350M, or $1,000M. The Money-on-Money multiple is $1,000M divided by $400M, which is 2.5x over five years. Since a 2x multiple in five years is approximately 15 percent and a 3x multiple is approximately 25 percent, this 2.5x multiple corresponds to approximately 20 percent IRR."},
+{cat:"LBO Calculations",q:"PE buys $100M EBITDA at 12x, 5x Debt/EBITDA. EBITDA grows to $200M in 5 years, zero Debt repaid. What exit multiple gives a 25% IRR?",a:"The Purchase Enterprise Value equals $1,200M, with Debt of $500M and Investor Equity of $700M. A 25 percent IRR over five years requires a 3x Money-on-Money multiple, meaning the PE firm needs $2,100M in equity proceeds. Since no Debt is repaid, the full $500M remains at exit, so the required Exit Enterprise Value equals $2,100M plus $500M, or $2,600M. Dividing $2,600M by the Year 5 EBITDA of $200M gives a required exit multiple of 13x."},
+{cat:"LBO Calculations",q:"Same deal, but company repays 75% of Debt. What exit multiple now?",a:"Repaying 75 percent of the $500M initial Debt balance means $375M is paid off, leaving $125M of Debt remaining at exit. The PE firm still needs to earn $2,100M in equity proceeds to achieve the 3x Money-on-Money multiple and 25 percent IRR. Therefore, the required Exit Enterprise Value equals $2,100M plus $125M, or $2,225M. Dividing $2,225M by Year 5 EBITDA of $200M gives a required exit multiple of approximately 11.1x, which rounds to 11x."},
+{cat:"LBO Calculations",q:"LBO: 10x purchase, 5x Debt/EBITDA, 11x exit, EBITDA $100M → $150M, 20% IRR over 5 years. How much Debt was repaid?",a:"A 20 percent IRR over five years corresponds to approximately a 2.5x Money-on-Money multiple. The Purchase Enterprise Value equals $1,000M, with Debt of $500M and Investor Equity of $500M. The PE firm needs $1,250M in exit proceeds, calculated as $500M multiplied by 2.5x. The Exit Enterprise Value equals $150M multiplied by 11x, or $1,650M. The Remaining Debt at exit therefore equals $1,650M minus $1,250M, or $400M. Debt repaid equals the initial $500M minus the remaining $400M, which is $100M."},
+
+// ─── LBO WALKTHROUGH ─────────────────────────────────────────
+{cat:"LBO Walkthrough",q:"Step 1 — Set up the scenario: A PE firm wants to acquire SteadyCo, a manufacturing business with $50M EBITDA, at a 10x purchase multiple, financed with 60% Debt / 40% Equity. What are the Sources & Uses?",a:"The Purchase Enterprise Value equals $50M multiplied by 10x, which is $500M. On the Sources side, Debt equals $500M multiplied by 60 percent, or $300M, and Equity equals $500M multiplied by 40 percent, or $200M, for total Sources of $500M. On the Uses side, the Purchase Price is $500M. In practice you would also add transaction fees of roughly 2 to 3 percent, but keeping it clean here, the PE firm writes a $200M equity check and borrows $300M at close, which is the starting capital structure."},
+{cat:"LBO Walkthrough",q:"Step 2 — Build the Debt schedule: SteadyCo has $300M of Debt at 8% interest. It generates $50M EBITDA with 20% taxes, $5M D&A, $8M CapEx, and no working capital change. How much Debt is repaid in Year 1?",a:"Starting from EBITDA of $50M, you subtract Interest Expense of $24M (8 percent of $300M) to get EBT of $26M. After taxes at 20 percent, Net Income is approximately $20.8M. Adding back D&A of $5M and subtracting CapEx of $8M gives Free Cash Flow of approximately $17.8M. Assuming all Free Cash Flow is swept to repay Debt, the ending Debt balance after Year 1 is $300M minus $17.8M, or approximately $282M."},
+{cat:"LBO Walkthrough",q:"Step 3 — Project 5 years: SteadyCo grows EBITDA at 8%/year. CapEx and D&A stay fixed. Interest rate stays at 8% on remaining Debt. Summarise the Debt balance and FCF over 5 years.",a:"With 8 percent annual EBITDA growth, Year 5 EBITDA reaches approximately $73.5M. As Debt falls each year through repayment, Interest Expense also declines, which increases Free Cash Flow further and accelerates repayment in a compounding effect sometimes called the cash flow snowball. Approximate cumulative Debt repayment over five years is around $110 to $120M, leaving remaining Debt at exit of roughly $185M. The key insight is that debt paydown accelerates over time because lower Debt means lower Interest, which means more Free Cash Flow available for further repayment."},
+{cat:"LBO Walkthrough",q:"Step 4 — Calculate the exit: PE sells SteadyCo after 5 years at 9x EBITDA (slight multiple compression from 10x entry). Year 5 EBITDA = $73.5M. Remaining Debt = $185M. What are the equity proceeds and MoM?",a:"The Exit Enterprise Value equals $73.5M multiplied by 9x, or $661.5M. Subtracting the remaining Debt of $185M gives Equity Proceeds of $476.5M. The initial Equity investment was $200M, so the Money-on-Money multiple equals $476.5M divided by $200M, or approximately 2.38x. A 2.38x multiple over five years corresponds to roughly 19 percent IRR, which falls just below the typical 20 percent PE hurdle rate. The multiple compression from 10x entry to 9x exit is the primary reason the deal falls slightly short of that target."},
+{cat:"LBO Walkthrough",q:"Step 5 — Sensitivity: What if the PE firm had paid 9x (not 10x) at entry, everything else equal?",a:"At a 9x entry multiple, the Purchase Enterprise Value falls to $450M, with Debt of $270M and Equity of $180M. The Exit Enterprise Value remains unchanged at $661.5M. With slightly lower initial Debt, the company repays a bit more principal over the holding period, leaving remaining Debt at exit of roughly $170M and generating Equity Proceeds of approximately $491M. The Money-on-Money multiple becomes $491M divided by $180M, or roughly 2.73x, which corresponds to approximately 22 percent IRR. This illustrates the critical lesson that entry multiple is the single most powerful lever in an LBO: paying just one turn less adds approximately 3 percentage points of IRR."},
+{cat:"LBO Walkthrough",q:"Step 6 — Sensitivity: What if EBITDA grew at 12%/year instead of 8%, same 9x exit multiple, original 10x entry?",a:"With 12 percent annual EBITDA growth, Year 5 EBITDA reaches $50M multiplied by 1.12 to the power of 5, which is approximately $88M. The Exit Enterprise Value equals $88M multiplied by 9x, or $792M. The higher cash flows also allow more Debt repayment during the holding period, leaving remaining Debt of roughly $170M and generating Equity Proceeds of approximately $622M. The Money-on-Money multiple becomes $622M divided by $200M, or about 3.1x, corresponding to approximately 25 percent IRR. This demonstrates that EBITDA growth is the second most powerful return lever: four additional percentage points of annual growth added roughly six percentage points of IRR versus the base case."},
+{cat:"LBO Walkthrough",q:"Step 7 — Putting it all together: What are the three main return drivers in this LBO and how did each contribute?",a:"The first driver is leverage and Debt paydown: the PE firm borrowed $300M and repaid roughly $115M over the holding period, transferring that value directly to equity without any change in operations, contributing approximately 0.6x to the Money-on-Money multiple. The second driver is EBITDA growth at 8 percent per year, which grew EBITDA from $50M to $73.5M and, at a 9x exit, added approximately $211M of Enterprise Value versus a flat EBITDA scenario, contributing roughly 1.0x. The third factor is multiple compression from 10x entry to 9x exit, which actually hurt returns by approximately 0.2x. The final result was approximately 2.38x and roughly 19 percent IRR, illustrating why PE firms target entry multiples so aggressively and focus relentlessly on operational improvement."},
+
+// ─── CONSUMER / RETAIL ───────────────────────────────────────
+{cat:"Consumer/Retail",q:"What are the main verticals in Consumer/Retail and how does valuation differ?",a:"The main verticals are Consumer Staples, which are required items for everyday living such as food and personal care products, and Consumer Discretionary, which are optional items like cars, appliances, fashion, and restaurants. Some analysts also consider pure-play retailers that distribute but do not produce as a separate segment. Consumer Discretionary companies tend to have higher Betas because they perform well when the economy is strong but suffer during recessions, while Consumer Staples are more defensive since people continue buying toothpaste and food regardless of economic conditions. As a result, Consumer Discretionary companies tend to trade at higher multiples in good economies and lower multiples in poor economies, while Consumer Staples maintain more stable multiples throughout the cycle."},
+{cat:"Consumer/Retail",q:"Why do franchise restaurants trade at higher multiples than company-owned restaurants?",a:"Franchise restaurants generally trade at higher multiples because they are capital-light businesses that do not require significant Capital Expenditures to grow. Instead of building and funding new locations themselves, franchisors license their brand to individual franchisees who bear the capital cost of opening and operating locations in exchange for a franchise fee. This business model produces high-margin, predictable, asset-light cash flows that investors typically value at a premium. Company-owned restaurant chains, by contrast, must fund new locations directly, which requires substantial ongoing CapEx and results in lower free cash flow margins."},
+{cat:"Consumer/Retail",q:"What are the key drivers in a 3-statement model for a retailer?",a:"The key top-line drivers are the number of stores, sales per store, same-store sales growth, total square footage, and sales per square foot or meter. Same-store sales growth is particularly important because it measures organic revenue growth from existing locations, excluding the contribution from newly opened stores. On the cost side, you would analyze Gross Margins by product or segment and the Contribution Margin for different store formats or geographies. Separating Maintenance CapEx from Growth CapEx is also essential, since it costs significantly more to open a new location than to maintain an existing one."},
+{cat:"Consumer/Retail",q:"What is '4-Wall EBITDA' and how does it differ from regular EBITDA?",a:"Four-Wall EBITDA is the asset-level profitability of a retailer, calculated by taking revenue from all stores, subtracting Cost of Goods Sold, and subtracting store-related operating expenses such as rent and employee costs required to operate the stores. It excludes corporate overhead such as salaries for the accounting, IT, and HR teams at the corporate headquarters. Regular EBITDA includes all operating expenses, both store-level and corporate, and therefore does not distinguish between asset-level profitability and the corporate cost burden. Four-Wall EBITDA is useful for evaluating the unit economics of individual stores and understanding how profitable the retail operation would be before corporate allocations."},
+{cat:"Consumer/Retail",q:"When is EBITDAR important in Consumer/Retail?",a:"Under IFRS, EBITDAR is largely irrelevant because the standard EBITDA metric already adds back the full lease expense from both Operating and Finance Leases, so companies are already comparable. Under U.S. GAAP, EBITDAR becomes important when the companies in a comparable set have very different mixes of Operating and Finance Leases, since the accounting treatment differs and can distort EBITDA comparisons. EBITDAR is also critical when a set includes both U.S. GAAP and IFRS companies, where you need the (TEV plus Operating Lease Liabilities) divided by EBITDAR multiple to normalize for the different lease accounting approaches and allow like-for-like comparisons."},
+
+// ─── DCM & LEVERAGED FINANCE ─────────────────────────────────
+{cat:"DCM & LevFin",q:"Why might a company issue Debt rather than Equity?",a:"A company might choose Debt if it is cheaper than Equity, which is typically the case for mature companies with stable cash flows, because interest is tax-deductible and Debt holders require a lower return than equity investors due to their senior claim in bankruptcy. Companies also have target leverage ratios, and if their current Debt levels are within acceptable ranges for their credit profile, issuing additional Debt makes sense. On the other hand, a company might issue Equity if it is a high-growth business trading at a high price-to-earnings multiple, making Equity issuance relatively cheap, if Debt would breach its credit covenants, or if the company's cash flows are too unpredictable to service additional interest and principal payments."},
+{cat:"DCM & LevFin",q:"Walk me through a Debt vs. Equity analysis.",a:"First, you assess the company's business profile to determine whether it is more of a growth or a value and mature company, since growth companies are generally better suited to Equity while mature companies can more easily support Debt. Second, you compare the after-tax costs of Debt and Equity and model how WACC would change under each scenario. If Debt appears appropriate, you build projections with the anticipated Debt terms, including covenants and interest rates, and stress test the projections in downside scenarios to ensure the company could comply with its financial covenants even with lower-than-expected performance. If the company can service the Debt comfortably, you recommend Debt; if the covenants are too restrictive or cash interest costs are problematic, you consider a Convertible Bond or Equity instead."},
+{cat:"DCM & LevFin",q:"You're advising a utility, railroad, and branded pharma company on their ideal capital structure. What do you recommend for each?",a:"The utility company is the best candidate for 100 percent Debt because consumers always need electricity and water, many utilities have local monopolies, and their revenues are highly predictable with limited growth potential, making them ideal borrowers from a lender's perspective. The railroad company is appropriate for a 50/50 Debt and Equity split because it is exposed to economic cycles and freight volume fluctuations, but it has significant tangible collateral in its physical assets and a predictable enough track record to support meaningful leverage. The branded pharmaceutical company is most appropriate for 100 percent Equity because its products are protected by patents that expire, it faces constant pressure to replace revenues through acquisition or R&D, and the binary outcomes from drug development make its cash flows too unpredictable to reliably service Debt."},
+{cat:"DCM & LevFin",q:"What are the key credit metrics for analyzing a company's debt capacity?",a:"The primary leverage metric is Debt divided by EBITDA, where higher values indicate more risk and leveraged buyout transactions typically operate in the range of 4 to 6 times. The primary coverage metric is EBITDA divided by Interest Expense, where higher values indicate a greater ability to service Debt and a minimum of 2.5 times is generally considered healthy. Debt divided by Total Assets and Free Cash Flow are also important for assessing repayment capacity. In addition to these quantitative metrics, analysts consider covenant compliance, the debt maturity schedule, and whether the company is investment grade or high yield."},
+{cat:"DCM & LevFin",q:"What is a high-yield bond?",a:"A high-yield bond is a bond rated below investment grade, which means it carries a rating of BB+ or lower from Standard and Poor's. Because these bonds carry a higher risk of default, investors demand a higher coupon rate to compensate for that risk. High-yield bonds typically come with more restrictive incurrence covenants, fixed rather than floating interest rates, longer maturities of 8 to 10 years or more, and no early repayment provisions. They are used extensively to finance leveraged buyouts and are the public debt market equivalent of leveraged loans. Key metrics for analyzing high-yield bonds include the yield to maturity, the yield spread over risk-free Treasuries, and the credit rating."},
+{cat:"DCM & LevFin",q:"What is a convertible bond?",a:"A convertible bond is a hybrid security that combines features of Debt and Equity: it is a bond that gives the holder the option to convert it into shares of the issuer's stock at a predetermined conversion price if the share price rises above that level. The issuer benefits from a lower cash coupon rate compared to a straight bond, because the conversion option has value to investors and they are willing to accept less current income in exchange for equity upside. Investors benefit from downside protection through the bond floor while retaining the potential to participate in share price appreciation. Convertibles are modeled as a straight bond plus a call option, and they are most useful when a company wants lower cash interest costs and expects its share price to appreciate."},
+
+// ─── DISTRESSED & RESTRUCTURING ──────────────────────────────
+{cat:"Distressed/Restructuring",q:"What are the differences between stressed, distressed, and bankrupt companies?",a:"A stressed company can still pay its interest and principal obligations but faces an upcoming debt maturity it may not be able to refinance, or is approaching a liquidity crisis that could become severe if business conditions worsen. A distressed company has already defaulted in some way, whether by missing an interest payment, violating a financial covenant such as a minimum EBITDA to Interest coverage ratio, or hitting a hard liquidity constraint. A bankrupt company has entered formal legal proceedings, either Chapter 7 liquidation in the US, where the business ceases and assets are sold to pay creditors in order of priority, or Chapter 11 reorganization, where the business continues operating under court protection while restructuring its obligations."},
+{cat:"Distressed/Restructuring",q:"What is the difference between Chapter 7 and Chapter 11 bankruptcy?",a:"Chapter 7 is a liquidation proceeding where the business ceases to operate, all assets are sold, and the proceeds are distributed to creditors in strict priority order from secured lenders at the top to unsecured creditors and then equity at the bottom. Chapter 11 is a reorganization proceeding where the business continues operating under the protection of an automatic stay on debt payments, giving it time to negotiate a restructuring plan with its creditors. Management typically remains in place as debtor in possession during Chapter 11, and the goal is for the company to emerge as a financially restructured but operationally intact entity. Most restructurings aim for Chapter 11 because it preserves business value, while Chapter 7 is the last resort when the business has no viable going-concern value."},
+{cat:"Distressed/Restructuring",q:"What is the 'fulcrum security'?",a:"The fulcrum security is the tranche of debt or other security in the capital structure at which the company's Enterprise Value runs out, meaning where creditor recoveries shift from 100 percent to a partial recovery. Holders of the fulcrum security are the ones who effectively own the reorganized company, because they stand at the boundary between being fully repaid and not being fully repaid. In a restructuring, fulcrum security holders typically receive equity in the reorganized company, giving them control of the business going forward, while senior creditors above them are paid in full and creditors below them receive little or nothing. Identifying the fulcrum security is critical to understanding who controls the restructuring negotiation."},
+{cat:"Distressed/Restructuring",q:"What is a debt-for-equity swap?",a:"A debt-for-equity swap occurs when lenders agree to exchange their debt claims for equity in the reorganized company rather than receiving cash repayment. This is used when the company cannot service its existing debt obligations and when the equity value of the reorganized business is worth more than simply liquidating the debt. Under this arrangement, the lenders become the new owners of the business while the original equity holders are typically wiped out or severely diluted because their claims rank below those of the lenders in the priority waterfall. Debt-for-equity swaps are the most common outcome in Chapter 11 reorganizations where the company has a viable but over-leveraged business."},
+{cat:"Distressed/Restructuring",q:"What options does a distressed company have?",a:"A distressed company has five main options. First, it can attempt to refinance by raising new Debt or Equity, though this is difficult when lenders and investors view it as a credit risk. Second, it can sell the whole company or parts of it through a sale process, which can generate proceeds to repay creditors. Third, it can pursue an out-of-court restructuring by negotiating directly and privately with its creditors to modify debt terms, which is faster, cheaper, and less damaging to its reputation than a formal filing. Fourth, it can file for Chapter 11 bankruptcy protection, which provides an automatic stay on debt payments and gives the company time to reorganize under court supervision. Finally, Chapter 7 liquidation is the last resort when no other options are viable."},
+
+// ─── EQUITY CAPITAL MARKETS ──────────────────────────────────
+{cat:"ECM",q:"Walk me through an IPO model.",a:"In Step 1, you determine a forward EBITDA multiple range by looking at comparable public companies, typically something like 12 to 16 times. In Step 2, you apply that range to the company's projected EBITDA to arrive at a Post-Money Enterprise Value at trading. In Step 3, you bridge from Enterprise Value to Equity Value by adding Cash, including the net IPO proceeds, and subtracting Debt. In Step 4, you apply an IPO pricing discount of 10 to 20 percent to the Post-Money Equity Value to determine the Offering Equity Value, which reflects the discount needed to attract investors. In Step 5, you divide by the total diluted shares, including new primary shares, to get the Offering Price per Share, and then calculate the percentage sold and the implied valuation multiples at pricing versus expected trading."},
+{cat:"ECM",q:"What is the difference between Primary and Secondary Shares in an IPO?",a:"Primary shares are new shares issued by the company itself, meaning the proceeds from their sale go directly to the company and increase its Cash balance. The issuance of primary shares also dilutes existing shareholders because the total share count increases. Secondary shares, by contrast, are existing shares sold by current investors such as founders or private equity sponsors, and the proceeds go entirely to those selling shareholders rather than to the company. A high percentage of secondary shares in an IPO is generally viewed as a red flag because it suggests that insiders are taking money off the table rather than reinvesting in the business, which may signal limited confidence in the company's future prospects."},
+{cat:"ECM",q:"What is a SPAC?",a:"A Special Purpose Acquisition Company, or SPAC, is a blank-check shell company that raises money through an IPO for the sole purpose of acquiring a private company at some point in the future. The target company effectively goes public through the SPAC rather than through a traditional IPO process, in what is called a de-SPAC transaction. SPAC shareholders have the right to redeem their shares for their pro-rata share of the trust if they do not approve of the proposed acquisition. SPACs became extremely popular in 2020 and 2021 as an alternative to traditional IPOs, but they fell out of favor due to poor post-merger performance and increased regulatory scrutiny from the SEC."},
+{cat:"ECM",q:"What is a Greenshoe/Overallotment provision?",a:"A Greenshoe, also called an Overallotment option, allows the underwriter to sell up to 15 percent more shares than were originally planned in the IPO. It exists primarily to provide price stabilization after the offering: if the stock price falls below the offering price in the aftermarket, the underwriter uses the short position created by the Greenshoe to buy shares in the open market, providing price support and signaling confidence. If the stock price rises above the offering price, the underwriter exercises the option to sell the additional shares at the offering price, keeping the proceeds and closing the short position. The mechanism effectively protects against excessive post-IPO volatility in both directions."},
+
+// ─── FIG ─────────────────────────────────────────────────────
+{cat:"FIG",q:"How do commercial banks differ from normal companies (for valuation purposes)?",a:"Commercial banks differ from normal companies in several fundamental ways that make standard valuation approaches inapplicable. First, the Balance Sheet drives the model rather than the Income Statement, because Loans and Deposits are the core business and their spread determines profitability. Second, you cannot separate operating and financing activities for a bank, which means there is no Enterprise Value; you use Equity Value multiples only. Third, Free Cash Flow is not a meaningful concept for banks, so you use the Dividend Discount Model instead of a DCF. Fourth, revenue is driven by Net Interest Margin and spreads rather than product sales. Fifth, banks face regulatory capital requirements such as Tier 1 Equity ratios that constrain their operations and must be incorporated into the analysis."},
+{cat:"FIG",q:"What valuation multiples are used for banks?",a:"The primary multiples used to value banks are Price divided by Earnings, Price divided by Book Value, and Price divided by Tangible Book Value. Price to Tangible Book Value is the most common in bank M&A because Tangible Book Value, which excludes Goodwill and other intangible assets, best represents the real capital at risk in the business. Enterprise Value divided by EBITDA and traditional DCF analysis are not applicable to banks because the intermingling of operating and financing activities makes these concepts meaningless in a banking context."},
+{cat:"FIG",q:"What is Net Interest Margin (NIM)?",a:"Net Interest Margin equals the difference between Interest Income and Interest Expense, divided by average Earning Assets. It measures the profitability of a bank's core lending activities relative to its funding costs, and is one of the most important indicators of a bank's financial health. When interest rates rise, NIM typically expands if loan rates reprice upward faster than deposit rates, since the bank earns more on its assets while its cost of funds increases more slowly. A bank with a consistently wider NIM earns more on each dollar of assets it deploys, which supports higher profitability and valuation multiples."},
+{cat:"FIG",q:"How do insurance companies differ from commercial banks?",a:"Insurance companies share some characteristics with banks in that you use Equity Value multiples rather than Enterprise Value, apply a Dividend Discount Model instead of a DCF, and deal with specific regulatory capital requirements. However, the key differences are that insurance revenue starts with Premiums on the Income Statement rather than Net Interest Income from Loans on the Balance Sheet, there is typically a higher proportion of non-interest revenue, and companies use Statutory Accounting which is closer to cash accounting. For Life Insurance companies, Embedded Value is an important additional valuation methodology, and capital requirements are linked to the Risk-Based Capital ratio rather than Tier 1 equity."},
+
+// ─── FINANCIAL SPONSORS GROUP ────────────────────────────────
+{cat:"FSG",q:"What are the key metrics and multiples for valuing a financial sponsor (PE firm)?",a:"Standard multiples such as EV divided by EBITDA and Price divided by Earnings still apply to PE firms, but there are additional metrics specific to the asset management business. Fee-Related Earnings represent the recurring management fee income, which is stable and predictable and typically valued at around 20 times. Performance fees or carried interest are lumpy and dependent on fund performance, so they are typically valued at around 10 times. Additional fund-level metrics include Total Value to Paid-In, which measures total value returned and remaining relative to capital invested, Distributions to Paid-In, which measures cash actually returned, and Residual Value to Paid-In, which measures unrealized value. TEV divided by AUM is also commonly used."},
+{cat:"FSG",q:"Why use a Sum-of-the-Parts valuation for a PE firm even if it has no different business segments?",a:"A Sum-of-the-Parts valuation is appropriate for PE firms even without distinct segments because they have materially different earnings streams that carry very different risk profiles and should therefore be valued at different multiples. Management fee income, captured in Fee-Related Earnings, is stable and recurring and commands a higher multiple of around 20 times. Performance fee or carried interest income is highly variable and depends on fund returns, so it warrants a lower multiple of around 10 times. The Net Asset Value of the firm's balance sheet investments constitutes a third component. Applying a single blended multiple to combined earnings would mask these distinctions and produce a less accurate valuation."},
+
+// ─── HEALTHCARE & BIOTECH ─────────────────────────────────────
+{cat:"Healthcare",q:"How does valuation differ for pre-revenue biotech vs. standard healthcare companies?",a:"Standard healthcare companies such as hospitals, medical device manufacturers, and generic drug producers are valued using a traditional DCF alongside comparable company multiples such as EV divided by EBITDA and Price divided by Earnings, similar to companies in other industries. Pre-revenue biotech companies require a fundamentally different approach because they have no current earnings or cash flow to anchor a valuation. Instead, you use a probability-adjusted DCF that incorporates the chances of each drug successfully completing clinical trials, revenue forecasts based on the addressable patient population and expected market share, and no Terminal Value since revenues typically collapse when patents expire. Relevant multiples include EV divided by Peak Sales or EV divided by projected revenue several years out."},
+{cat:"Healthcare",q:"Walk me through a pre-revenue biotech valuation.",a:"In Step 1, you forecast Research and Development costs through all clinical phases for each drug candidate. In Step 2, you apply probability adjustments to reflect the historical success rates for each phase of clinical development, since most drugs fail before reaching approval. In Step 3, for the commercial period after approval, you forecast revenue by multiplying the total addressable patient population by the expected market share and the price per patient. In Step 4, you model the sharp revenue decline that occurs when the patent expires, typically a drop of 80 to 90 percent or more as generic competition enters. In Step 5, you build Unlevered Free Cash Flow, discount all cash flows at WACC, and sum them without a Terminal Value. Finally, you add Cash and subtract Debt to get the Implied Equity Value."},
+
+// ─── INDUSTRIALS ─────────────────────────────────────────────
+{cat:"Industrials",q:"How do you forecast airline cash flows?",a:"The key top-line driver for an airline is Available Seat Kilometers, which represents the total capacity offered, multiplied by the Load Factor, which gives Revenue Passenger Kilometers representing actual passenger usage. Passenger Revenue then equals Revenue Passenger Kilometers multiplied by the average Passenger Yield, or revenue per passenger kilometer. In addition to passenger revenue, airlines earn meaningful ancillary revenue from baggage fees, loyalty programs, and cargo. On the cost side, fuel is the largest and most volatile expense, followed by fixed non-fuel costs such as staff, maintenance, and aircraft leases. The Cash Flow Statement is dominated by a large Depreciation add-back and significant ongoing Capital Expenditures for fleet investment. Key operating metrics include Revenue per Available Seat Kilometer, Cost per Available Seat Kilometer, and Load Factor."},
+{cat:"Industrials",q:"What is the NAV model in Maritime/Shipping and what unique metrics are used?",a:"The Net Asset Value model for maritime and shipping companies works by estimating the current market values of the company's vessels and other assets, subtracting all liabilities, and arriving at the Implied Equity Value. Price to NAV is the primary valuation multiple in the sector. Because shipping companies are highly capital-intensive and their vessel values fluctuate with market conditions, the NAV model captures the asset value more accurately than a traditional earnings-based multiple. Additional metrics include Distributable Cash Flow, which equals EBITDA minus Capital Expenditures, and EBITDAR or EBITDAR minus CapEx for companies with significant lease obligations. Many shipping firms are structured as General Partner and Limited Partner entities similar to private equity funds, which requires additional analysis of incentive distribution rights and carry."},
+
+// ─── METALS & MINING ─────────────────────────────────────────
+{cat:"Metals/Mining",q:"How does valuation differ between mining producers vs. pure miners?",a:"Producers, such as steel companies that purchase raw materials and manufacture finished metal products, are valued using a standard DCF analysis alongside comparable company multiples such as EV divided by EBITDA and Price divided by Earnings, similar to other manufacturing businesses. Pure miners, by contrast, are valued using a Net Asset Value model that is essentially a decades-long DCF with no Terminal Value, as well as multiples such as EV divided by Proved Reserves, EV divided by Resources, and Price divided by NAV. The NAV model is appropriate because the value of a mining company is primarily driven by its long-term asset base and the commodity prices those reserves will be extracted at, rather than near-term earnings. Both types of companies are highly sensitive to commodity prices, so analysts typically build multiple price scenarios."},
+{cat:"Metals/Mining",q:"Walk me through a NAV model for a gold mining company.",a:"You begin by splitting the company's assets into developed mines with existing production and undeveloped or potential mines that are not yet in operation. For existing mines, you project production each year until reserves are fully depleted. For undeveloped mines, you model the capital expenditure required to develop them, followed by a production ramp-up to peak output and then a gradual decline to near zero. Revenue for each mine equals projected production multiplied by the gold price, for which you build multiple commodity price scenarios such as spot, base, and conservative. You then deduct Operating Costs, Capital Expenditures, cash taxes, and General and Administrative expenses to arrive at Free Cash Flow. You discount all cash flows at a rate of roughly 5 to 8 percent with no Terminal Value, and sum them to get the NAV. You then add Cash and subtract Debt to arrive at the Equity NAV."},
+
+// ─── OIL & GAS ───────────────────────────────────────────────
+{cat:"Oil & Gas",q:"What are the main O&G verticals and how does valuation differ?",a:"The main verticals are Exploration and Production, also called Upstream, where companies find and produce oil and gas and are valued using a NAV model alongside multiples such as EV divided by EBITDAX, EV divided by Proved Reserves, and EV divided by Daily Production. Midstream companies transport and process oil and gas through pipelines and processing facilities, are often structured as Master Limited Partnerships, and are valued using yield-based multiples and standard EV divided by EBITDA. Downstream companies refine crude oil into petroleum products and are valued using standard manufacturing multiples. Oilfield Services companies that provide equipment and services to producers are also valued using standard approaches. Integrated majors that span multiple verticals are typically valued using a Sum-of-the-Parts methodology."},
+{cat:"Oil & Gas",q:"Walk me through an E&P NAV model.",a:"You begin by splitting the company's reserves into Proved Developed assets, which are already producing and decline over time, and Proved Undeveloped assets, where the company plans to drill a certain number of wells per year, each starting at an initial production rate and declining to an ultimate recovery. Revenue for each category equals production multiplied by the commodity price, and you build separate scenarios for oil, natural gas, and natural gas liquids prices. You then deduct Lease Operating Expenses, Production Taxes, Drilling and Completion CapEx, and General and Administrative costs to arrive at Free Cash Flow. You aggregate all cash flows and discount at 10 percent per year, which is the industry standard discount rate, with no Terminal Value. Finally, you add Cash and the estimated value of undeveloped acreage, subtract Debt, and divide by diluted shares to arrive at NAV per share."},
+{cat:"Oil & Gas",q:"What is EBITDAX and why is it used in O&G?",a:"EBITDAX stands for Earnings Before Interest, Taxes, Depreciation, Amortization, and Exploration expenses, and it is used in the Exploration and Production sector to normalize EBITDA across companies with different levels of exploration activity. Exploration charges can be lumpy, non-recurring, and vary significantly from year to year depending on how aggressively a company is drilling exploration wells versus production wells. By adding back these exploration expenses, EBITDAX creates a more comparable metric that reflects the underlying production economics of the business rather than the timing of exploration spending. EV divided by EBITDAX is the standard operating metric multiple for comparing E&P companies."},
+
+// ─── POWER & UTILITIES ───────────────────────────────────────
+{cat:"Power & Utilities",q:"How are regulated utility companies different from standard companies for valuation?",a:"Regulated utilities are fundamentally different because their rates and allowed returns are set by regulatory bodies rather than determined by market forces. Regulators allow utilities to earn a specific return on their Rate Base, which represents the Net PP&E and other allowed investments, and they set electricity or gas rates at whatever level allows the utility to recover its costs and earn that authorized return on equity. As a result, valuation for regulated utilities involves metrics such as EV divided by Rate Base and EV divided by Power Capacity in dollars per megawatt, alongside Price divided by Book Value and Price divided by Tangible Book Value, which reflect the close relationship between regulated equity returns and book value. A standard DCF is still used but is calibrated to the regulatory framework."},
+{cat:"Power & Utilities",q:"A regulated utility: Rate Base $2,000, 50% Debt/Capital, Authorized ROE 12%, Pre-Tax Debt Cost 6%, O&M $60, D&A $20, Electricity Sold 1,500 GWh. What rate can it charge? (25% tax)",a:"The Equity base equals $2,000 multiplied by 50 percent, or $1,000. The allowed Net Income equals $1,000 multiplied by the authorized ROE of 12 percent, or $120. The Pre-Tax Income required equals $120 divided by (1 minus 25%), or $160. Interest Expense equals the Debt base of $1,000 multiplied by the 6 percent pre-tax cost, or $60. The allowed Revenue therefore equals Pre-Tax Income of $160 plus Interest of $60 plus O&M of $60 plus D&A of $20, totaling $300M. Dividing $300M by the 1,500 GWh of electricity sold gives an allowed rate of $0.20 per kilowatt-hour."},
+
+// ─── REAL ESTATE ─────────────────────────────────────────────
+{cat:"Real Estate",q:"What is Net Operating Income (NOI) and why is it important in real estate?",a:"Net Operating Income equals Property Revenue minus Operating Expenses minus Property Taxes, and it excludes interest expense, Debt principal repayments, and most capital costs such as tenant improvements, leasing commissions, and Capital Expenditures, though some analysts deduct a reserve for these items. NOI is the real estate equivalent of EBITDA in that it measures the income generated by a property on a capital-structure-neutral basis, making it easy to compare properties of different sizes and financing structures. It is the fundamental input into Cap Rate analysis, and because it excludes capital structure effects, it allows investors to evaluate the operating performance of a property independently of how it was financed."},
+{cat:"Real Estate",q:"What is the Cap Rate and how do you use it?",a:"The Cap Rate, or Capitalization Rate, equals the property's forward Net Operating Income divided by its current market price or asking price. Conceptually, the Cap Rate is the real estate equivalent of an earnings yield and is the reciprocal of a valuation multiple: a 5 percent Cap Rate implies a value of 20 times NOI. To value a property, you apply the market Cap Rate for comparable properties to the subject property's NOI to estimate its value. A higher Cap Rate implies a lower valuation relative to income, indicating a riskier or lower-growth property, while a lower Cap Rate implies a higher valuation and is associated with stable, prime-location properties with predictable cash flows."},
+{cat:"Real Estate",q:"Why can property acquisitions use 60–70% leverage when PE LBOs typically use less?",a:"Real estate properties can support higher leverage for several reasons. First, commercial properties generate high NOI margins, often 50 percent or more of revenue. Second, they produce relatively stable and predictable cash flows backed by long-term leases, which reduces the risk of debt service shortfalls. Third, the physical property itself serves as strong tangible collateral, which lenders are comfortable lending against at high loan-to-value ratios. Fourth, the commercial real estate lending market has long operated at these leverage levels and lenders price their loans accordingly. Private equity LBOs, by contrast, involve operating businesses with more variable cash flows, less tangible collateral, and higher operational risk, which restricts the amount of Debt that can be raised."},
+
+// ─── REITs ───────────────────────────────────────────────────
+{cat:"REITs",q:"How do you value an Equity REIT?",a:"Equity REITs are valued using a combination of methodologies. Comparable company analysis uses multiples such as Price divided by Funds From Operations and Price divided by Adjusted Funds From Operations. Precedent transactions provide a sense of the control premium in the sector. A levered or unlevered DCF discounts projected cash flows at the appropriate rate. Most importantly, the NAV Model is particularly relevant for US REITs because US GAAP records properties at historical cost less depreciation rather than fair value, meaning book value significantly understates the true worth of the real estate portfolio. The NAV Model marks all assets to current market value, subtracts liabilities, and divides by share count to arrive at NAV per share, which you then compare to the current share price."},
+{cat:"REITs",q:"What are FFO and AFFO and why are they used?",a:"Funds From Operations equals Net Income plus real estate Depreciation and Amortization, minus gains on property sales. It adds back real estate-specific D&A because the physical properties of a well-maintained REIT typically appreciate in value over time rather than declining, making Depreciation a misleading non-cash charge that does not reflect real economic value erosion. Adjusted Funds From Operations goes further by subtracting Maintenance Capital Expenditures and straight-line rent adjustments, making it a more conservative and more accurate representation of the REIT's distributable cash flow. Because Net Income is distorted by these non-cash charges, investors use Price divided by FFO and Price divided by AFFO in place of Price divided by Earnings when valuing REITs."},
+{cat:"REITs",q:"Walk me through a REIT NAV Model.",a:"In Step 1, you project the property portfolio's 12-month forward Net Operating Income. In Step 2, you divide that NOI by the appropriate market Cap Rate for the property type and geography to determine the Market Value of the Gross Real Estate Assets. In Step 3, you value non-rental income streams such as fee income at a higher Cap Rate to reflect their different risk profile. In Step 4, you mark other Balance Sheet items to market, including adjusting Debt to reflect current market interest rates rather than historical book values. In Step 5, you subtract the market value of all Liabilities from the market value of Assets to arrive at Net Asset Value. Finally, you divide NAV by the diluted share count to get NAV per Share and compare it to the current trading price to determine whether the REIT is trading at a premium or discount to NAV."},
+
+// ─── TECHNOLOGY, MEDIA & TELECOM ─────────────────────────────
+{cat:"TMT",q:"What are the key differences in SaaS/subscription company metrics vs. traditional companies?",a:"SaaS and subscription companies are evaluated using a distinct set of metrics that capture the recurring nature of their revenue model. Annual Recurring Revenue and Monthly Recurring Revenue measure the predictable, subscription-based revenue base. Churn Rate measures the percentage of customers or revenue lost in a period, with lower churn indicating a stickier product. Customer Acquisition Cost and Lifetime Value measure how much it costs to acquire a customer versus how much value that customer generates over their relationship with the company, and an LTV to CAC ratio above 3 times is generally considered healthy. Net Revenue Retention above 100 percent indicates that expansion revenue from existing customers exceeds losses from churn. These metrics replace traditional margin and growth measures for early-stage companies that may not yet be profitable."},
+{cat:"TMT",q:"What is 'Content Amortization' and why does it affect Netflix's FCF differently than reported?",a:"Content companies such as Netflix spend large amounts of cash to acquire or develop original content, but they spread the cost of that content over its useful life through amortization rather than expensing it immediately. This Content Amortization appears as a cost on the Income Statement within Cost of Revenues and therefore reduces reported EBITDA. However, the actual cash spending on content acquisition and production shows up as a separate line item in the investing section of the Cash Flow Statement, similar to Capital Expenditures. If you calculate Free Cash Flow using EBITDA as the starting point, you will undercount the true cash burden of the content spend. The correct approach is to include both the EBITDA-reducing amortization effect and the actual cash content expenditure, which often makes the true Free Cash Flow Conversion ratio for content companies significantly lower than a naive EBITDA-based calculation would suggest."},
+{cat:"TMT",q:"How does telecom differ from software/semiconductor companies?",a:"Telecom companies are capital-intensive because they must continuously invest in network infrastructure such as cell towers and fiber networks, they are heavily regulated as providers of essential communications services, and they tend to operate as oligopolies or near-monopolies in many markets. Their revenues are relatively inelastic since consumers prioritize mobile and internet connectivity even in recessions, and large diversified telecoms are often valued using a Sum-of-the-Parts approach. Semiconductor manufacturers are also capital-intensive, requiring expensive fabrication plants, and their revenues are highly cyclical due to inventory cycles and technology upgrade waves. Software companies, by contrast, are capital-light, labor-intensive, often operate on subscription models with high gross margins, and are valued primarily on growth and recurring revenue metrics rather than capital-intensive earnings."},
+];
+
+// ── APP STATE ──────────────────────────────────────────────────
+let deck=[], idx=0, know=0, rev=0, flipped=false, activeCat='All', currentView='flashcard';
+const cats=['All',...new Set(CARDS.map(c=>c.cat))];
+
+function buildFilters(){
+  const el=document.getElementById('filters');
+  cats.forEach(cat=>{
+    const b=document.createElement('button');
+    b.className='filter-btn'+(cat==='All'?' active':'');
+    b.textContent=cat;
+    b.onclick=()=>setCat(cat);
+    el.appendChild(b);
+  });
+}
+
+function setCat(cat){
+  activeCat=cat;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.toggle('active',b.textContent===cat));
+  deck=cat==='All'?[...CARDS]:CARDS.filter(c=>c.cat===cat);
+  shuffle(deck);
+  idx=0; know=0; rev=0; flipped=false;
+  show('done',false); show('controls',true); show('cwrap',true); show('kbh',true);
+  updateStats(); render();
+  if(currentView==='list') renderList();
+}
+
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}}
+
+function render(){
+  if(idx>=deck.length){complete(); return;}
+  const c=deck[idx];
+  document.getElementById('cq').innerHTML=c.q;
+  document.getElementById('ca').innerHTML=c.a;
+  document.getElementById('ctag').textContent=c.cat;
+  const lbl=`${idx+1} / ${deck.length}`;
+  document.getElementById('cn').textContent=lbl;
+  document.getElementById('cn2').textContent=lbl;
+  flipped=false;
+  document.getElementById('card').classList.remove('flipped');
+  updateProgress();
+}
+
+function flip(){flipped=!flipped; document.getElementById('card').classList.toggle('flipped',flipped);}
+
+function next(){if(idx<deck.length-1){idx++;flipped=false;document.getElementById('card').classList.remove('flipped');render();}else{complete();}}
+function prev(){if(idx>0){idx--;flipped=false;document.getElementById('card').classList.remove('flipped');render();}}
+
+function markKnow(){know++;deck[idx]._k=true;updateStats();next();}
+function markRev(){rev++;deck[idx]._r=true;updateStats();next();}
+
+function updateStats(){
+  document.getElementById('s-know').textContent=know;
+  document.getElementById('s-rev').textContent=rev;
+  document.getElementById('s-tot').textContent=deck.length;
+}
+
+function updateProgress(){
+  const p=deck.length?Math.round(idx/deck.length*100):0;
+  document.getElementById('pb').style.width=p+'%';
+  document.getElementById('pb-txt').textContent=`Card ${idx+1} of ${deck.length}`;
+  document.getElementById('pb-pct').textContent=p+'%';
+}
+
+function show(id,visible){
+  const el=document.getElementById(id);
+  if(id==='done') el.style.display=visible?'flex':'none';
+  else el.style.display=visible?'':'none';
+}
+
+function complete(){
+  show('done',true); show('controls',false); show('cwrap',false); show('kbh',false);
+  document.getElementById('f-know').textContent=know;
+  document.getElementById('f-rev').textContent=rev;
+  document.getElementById('pb').style.width='100%';
+  document.getElementById('pb-pct').textContent='100%';
+}
+
+function retryRev(){
+  const rc=deck.filter(c=>c._r).map(c=>{delete c._r; delete c._k; return c;});
+  if(!rc.length){alert('No review cards!');return;}
+  deck=rc; shuffle(deck); idx=0; know=0; rev=0;
+  show('done',false); show('controls',true); show('cwrap',true); show('kbh',true);
+  updateStats(); render();
+}
+function restartAll(){setCat(activeCat);}
+
+document.addEventListener('keydown',e=>{
+  if(document.getElementById('done').style.display==='flex') return;
+  if(e.key===' '||e.key==='Enter'){e.preventDefault();flip();}
+  else if(e.key==='ArrowRight')next();
+  else if(e.key==='ArrowLeft')prev();
+  else if(e.key==='g'||e.key==='G')markKnow();
+  else if(e.key==='r'||e.key==='R')markRev();
+});
+
+buildFilters();
+setCat('All');
+
+// ─── CUSTOM CARDS (localStorage) ─────────────────────────────
+const STORAGE_KEY = 'ib_custom_cards';
+
+function loadCustomCards(){
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+  catch(e){ return []; }
+}
+
+function saveCustomCards(cards){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(cards));
+}
+
+function getCustomCards(){ return loadCustomCards(); }
+
+function injectCustomCards(){
+  const custom = loadCustomCards();
+  // Remove any previously injected custom cards from CARDS array
+  const base = CARDS.filter(c => !c._custom);
+  // Add fresh custom cards
+  custom.forEach(c => base.push({...c, _custom:true}));
+  CARDS.length = 0;
+  base.forEach(c => CARDS.push(c));
+  // Rebuild filters to include any new categories
+  rebuildFilters();
+  // Refresh current deck if it should include this category
+  setCat(activeCat);
+}
+
+function rebuildFilters(){
+  const el = document.getElementById('filters');
+  el.innerHTML = '';
+  const newCats = ['All', ...new Set(CARDS.map(c => c.cat))];
+  newCats.forEach(cat => {
+    const b = document.createElement('button');
+    b.className = 'filter-btn' + (cat === activeCat ? ' active' : '');
+    b.textContent = cat;
+    b.onclick = () => setCat(cat);
+    el.appendChild(b);
+  });
+  // Also update datalist suggestions
+  const dl = document.getElementById('cat-suggestions');
+  const dl2 = document.querySelector('#edit-overlay #cat-suggestions');
+  const catList = [...new Set(CARDS.map(c=>c.cat))].sort();
+  const opts = catList.map(c=>`<option value="${c}">`).join('');
+  if(dl) dl.innerHTML = opts;
+}
+
+// Modal open/close
+function openModal(){
+  document.getElementById('new-cat').value='';
+  document.getElementById('new-q').value='';
+  document.getElementById('new-a').value='';
+  switchTab('add', document.querySelector('.tab'));
+  renderCustomList();
+  updateCustomCount();
+  document.getElementById('modal-overlay').classList.add('open');
+}
+function closeModal(){ document.getElementById('modal-overlay').classList.remove('open'); }
+function handleOverlayClick(e){ if(e.target===document.getElementById('modal-overlay')) closeModal(); }
+
+function switchTab(name, btn){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-'+name).classList.add('active');
+  if(name==='manage') renderCustomList();
+}
+
+function saveCard(){
+  const cat = document.getElementById('new-cat').value.trim();
+  const q   = document.getElementById('new-q').value.trim();
+  const a   = document.getElementById('new-a').value.trim();
+  if(!cat||!q||!a){ alert('Please fill in all three fields.'); return; }
+  const cards = loadCustomCards();
+  cards.push({ id: Date.now(), cat, q, a });
+  saveCustomCards(cards);
+  injectCustomCards();
+  updateCustomCount();
+  document.getElementById('new-cat').value='';
+  document.getElementById('new-q').value='';
+  document.getElementById('new-a').value='';
+  // Flash feedback
+  const btn = document.querySelector('#tab-add .btn.primary');
+  const orig = btn.textContent;
+  btn.textContent = '✓ Saved!';
+  btn.style.background = 'var(--green)';
+  btn.style.borderColor = 'var(--green)';
+  setTimeout(()=>{ btn.textContent=orig; btn.style.background=''; btn.style.borderColor=''; }, 1200);
+}
+
+function updateCustomCount(){
+  const n = loadCustomCards().length;
+  document.getElementById('custom-count').textContent = n;
+}
+
+function renderCustomList(){
+  const list = document.getElementById('custom-list');
+  const cards = loadCustomCards();
+  if(!cards.length){
+    list.innerHTML = '<div class="empty-state">No custom cards yet.<br>Add one using the form above.</div>';
+    return;
+  }
+  list.innerHTML = cards.map(c => `
+    <div class="custom-item" id="ci-${c.id}">
+      <div class="custom-item-text">
+        <div class="custom-item-cat">${escHtml(c.cat)}</div>
+        <div class="custom-item-q">${escHtml(c.q)}</div>
+      </div>
+      <div class="custom-item-btns">
+        <button class="icon-btn edit" onclick="openEdit(${c.id})" title="Edit">✏️</button>
+        <button class="icon-btn del" onclick="deleteCard(${c.id})" title="Delete">🗑️</button>
+      </div>
+    </div>`).join('');
+}
+
+function escHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function deleteCard(id){
+  if(!confirm('Delete this card?')) return;
+  const cards = loadCustomCards().filter(c => c.id !== id);
+  saveCustomCards(cards);
+  injectCustomCards();
+  updateCustomCount();
+  renderCustomList();
+}
+
+// Edit modal
+function openEdit(id){
+  const card = loadCustomCards().find(c => c.id === id);
+  if(!card) return;
+  document.getElementById('edit-id').value = id;
+  document.getElementById('edit-cat').value = card.cat;
+  document.getElementById('edit-q').value = card.q;
+  document.getElementById('edit-a').value = card.a;
+  document.getElementById('edit-overlay').classList.add('open');
+}
+function closeEdit(){ document.getElementById('edit-overlay').classList.remove('open'); }
+function handleEditOverlayClick(e){ if(e.target===document.getElementById('edit-overlay')) closeEdit(); }
+
+function updateCard(){
+  const id  = parseInt(document.getElementById('edit-id').value);
+  const cat = document.getElementById('edit-cat').value.trim();
+  const q   = document.getElementById('edit-q').value.trim();
+  const a   = document.getElementById('edit-a').value.trim();
+  if(!cat||!q||!a){ alert('Please fill in all three fields.'); return; }
+  const cards = loadCustomCards().map(c => c.id===id ? {...c,cat,q,a} : c);
+  saveCustomCards(cards);
+  closeEdit();
+  injectCustomCards();
+  updateCustomCount();
+  renderCustomList();
+}
+
+// ─── VIEW TOGGLE ─────────────────────────────────────────────
+
+function setView(v){
+  currentView = v;
+  document.getElementById('vbtn-flash').classList.toggle('active', v==='flashcard');
+  document.getElementById('vbtn-list').classList.toggle('active', v==='list');
+  document.getElementById('vbtn-formulas').classList.toggle('active', v==='formulas');
+  document.getElementById('list-view').style.display = v==='list' ? 'block' : 'none';
+  document.getElementById('formula-view').style.display = v==='formulas' ? 'block' : 'none';
+  document.querySelector('.card-area').style.display = v==='flashcard' ? '' : 'none';
+  document.getElementById('progress-wrap').style.display = v==='flashcard' ? '' : 'none';
+  if(v==='list') renderList();
+}
+
+// ─── LIST VIEW ────────────────────────────────────────────────
+function renderList(){
+  const query = (document.getElementById('list-search').value||'').toLowerCase().trim();
+  const source = activeCat==='All' ? CARDS : CARDS.filter(c=>c.cat===activeCat);
+  const filtered = query
+    ? source.filter(c => c.q.toLowerCase().includes(query) || c.a.toLowerCase().includes(query))
+    : source;
+
+  document.getElementById('list-count').textContent =
+    `${filtered.length} question${filtered.length!==1?'s':''} ${activeCat!=='All'?'in '+activeCat:''} ${query?'matching "'+query+'"':''}`.trim();
+
+  if(!filtered.length){
+    document.getElementById('list-content').innerHTML = '<div class="list-no-results">No questions match your search.</div>';
+    return;
+  }
+
+  // Group by category
+  const groups = {};
+  filtered.forEach((c,i)=>{
+    if(!groups[c.cat]) groups[c.cat]=[];
+    groups[c.cat].push({...c, _listIdx: i});
+  });
+
+  let globalNum = 0;
+  let html = '';
+  Object.entries(groups).forEach(([cat, cards])=>{
+    html += `<div class="list-group">
+      <div class="list-group-header">${escHtml(cat)}<span class="list-group-count">${cards.length} question${cards.length!==1?'s':''}</span></div>`;
+    cards.forEach(c=>{
+      globalNum++;
+      const uid = 'li-' + globalNum;
+      html += `<div class="list-item" id="${uid}">
+        <div class="list-item-header" onclick="toggleListItem('${uid}')">
+          <span class="list-item-num">#${globalNum}</span>
+          <span class="list-item-q">${escHtml(c.q)}</span>
+          <span class="list-item-chevron">▶</span>
+        </div>
+        <div class="list-item-answer">${c.a}</div>
+      </div>`;
+    });
+    html += '</div>';
+  });
+  document.getElementById('list-content').innerHTML = html;
+}
+
+function toggleListItem(uid){
+  const el = document.getElementById(uid);
+  const wasOpen = el.classList.contains('open');
+  // Close all
+  document.querySelectorAll('.list-item.open').forEach(e=>e.classList.remove('open'));
+  if(!wasOpen) el.classList.add('open');
+  if(!wasOpen) el.scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+// Load custom cards on startup
+injectCustomCards();
+updateCustomCount();
+</script>
+</body>
+</html>
