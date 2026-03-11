@@ -5,162 +5,788 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>IB Interview Flashcards – Full Technical Edition</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap');
-:root{--bg:#0b0b10;--surface:#131319;--card-f:#18181f;--card-b:#121219;--gold:#c9a84c;--violet:#8b7cf6;--text:#e4e2ef;--muted:#5e5c78;--border:#222230;--green:#3ecf8e;--red:#e05c6a;--radius:18px}
-*{margin:0;padding:0;box-sizing:border-box}
-body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center}
-body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 15% 15%,rgba(139,124,246,.07) 0%,transparent 55%),radial-gradient(ellipse at 85% 85%,rgba(201,168,76,.05) 0%,transparent 55%);pointer-events:none;z-index:0}
-/* HEADER */
-header{width:100%;max-width:960px;padding:28px 24px 12px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;position:relative;z-index:1}
-.logo h1{font-family:'Playfair Display',serif;font-size:1.35rem;color:var(--gold);letter-spacing:.02em}
-.logo p{font-size:.72rem;color:var(--muted);margin-top:3px}
-.stats{display:flex;gap:22px}
-.stat-num{font-family:'Playfair Display',serif;font-size:1.5rem;color:var(--gold);line-height:1}
-.stat-label{font-size:.62rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-top:2px;text-align:center}
-/* FILTERS */
-.filters{width:100%;max-width:960px;padding:0 24px 16px;display:flex;gap:7px;flex-wrap:wrap;position:relative;z-index:1}
-.filter-btn{padding:5px 13px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:.72rem;cursor:pointer;transition:all .2s;letter-spacing:.02em;white-space:nowrap}
-.filter-btn:hover{border-color:var(--gold);color:var(--gold)}
-.filter-btn.active{background:var(--gold);border-color:var(--gold);color:#0b0b10;font-weight:500}
-/* PROGRESS */
-.progress-wrap{width:100%;max-width:960px;padding:0 24px 20px;position:relative;z-index:1}
-.pb-bg{height:2px;background:var(--border);border-radius:2px;overflow:hidden}
-.pb-fill{height:100%;background:linear-gradient(90deg,var(--violet),var(--gold));border-radius:2px;transition:width .4s ease}
-.pb-labels{font-size:.68rem;color:var(--muted);margin-top:5px;display:flex;justify-content:space-between}
-/* CARD */
-.card-area{width:100%;max-width:800px;padding:0 24px;perspective:1400px;position:relative;z-index:1;display:flex;flex-direction:column;align-items:center}
-.card-wrap{width:100%;cursor:pointer;margin-bottom:20px}
-.card{width:100%;min-height:300px;position:relative;transform-style:preserve-3d;transition:transform .55s cubic-bezier(.4,.2,.2,1)}
-.card.flipped{transform:rotateY(180deg)}
-.card-face{position:absolute;width:100%;min-height:300px;backface-visibility:hidden;border-radius:var(--radius);padding:36px 40px;display:flex;flex-direction:column;justify-content:center}
-.card-front{background:var(--card-f);border:1px solid var(--border);box-shadow:0 24px 70px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.035)}
-.card-back{background:var(--card-b);border:1px solid rgba(139,124,246,.25);box-shadow:0 24px 70px rgba(0,0,0,.45),inset 0 1px 0 rgba(139,124,246,.06);transform:rotateY(180deg)}
-.card-num{position:absolute;top:18px;right:22px;font-size:.67rem;color:var(--muted)}
-.card-tag{font-size:.63rem;text-transform:uppercase;letter-spacing:.12em;color:var(--gold);margin-bottom:18px;display:flex;align-items:center;gap:8px}
-.card-tag::before{content:'';display:inline-block;width:16px;height:1px;background:var(--gold);opacity:.6}
-.card-back .card-tag{color:var(--violet)}
-.card-back .card-tag::before{background:var(--violet)}
-.card-q{font-family:'Playfair Display',serif;font-size:1.28rem;line-height:1.55;color:var(--text)}
-.flip-hint{position:absolute;bottom:16px;right:20px;font-size:.62rem;color:var(--muted);opacity:.6;letter-spacing:.04em}
-.card.flipped .flip-hint{display:none}
-.card-a{font-size:.88rem;line-height:1.8;color:#c0bdd4}
-.card-a strong{color:var(--gold);font-weight:500}
-.card-a ul{padding-left:18px;margin-top:6px}
-.card-a li{margin-bottom:4px}
-/* CONTROLS */
-.controls{display:flex;gap:10px;align-items:center;margin-bottom:18px;flex-wrap:wrap;justify-content:center}
-.btn{display:flex;align-items:center;gap:6px;padding:9px 20px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-family:'DM Sans',sans-serif;font-size:.8rem;cursor:pointer;transition:all .2s;letter-spacing:.02em}
-.btn:hover{border-color:var(--gold);color:var(--gold)}
-.btn.know{border-color:var(--green);color:var(--green)}
-.btn.know:hover{background:rgba(62,207,142,.1)}
-.btn.skip{border-color:var(--red);color:var(--red)}
-.btn.skip:hover{background:rgba(224,92,106,.1)}
-.btn.primary{background:var(--gold);border-color:var(--gold);color:#0b0b10;font-weight:500}
-.btn.primary:hover{opacity:.88}
-/* COMPLETE */
-.complete-screen{display:none;flex-direction:column;align-items:center;text-align:center;padding:56px 24px;max-width:460px;margin:0 auto}
-.complete-screen.show{display:flex}
-.complete-icon{font-size:2.8rem;margin-bottom:14px}
-.complete-screen h2{font-family:'Playfair Display',serif;font-size:1.9rem;color:var(--gold);margin-bottom:8px}
-.complete-screen p{color:var(--muted);margin-bottom:26px;line-height:1.6;font-size:.9rem}
-.score-grid{display:flex;gap:36px;margin-bottom:30px}
-.score-num{font-family:'Playfair Display',serif;font-size:2rem}
-.score-num.g{color:var(--green)}
-.score-num.r{color:var(--red)}
-.score-label{font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-top:3px}
-/* KEYBOARD HINTS */
-.kb-hints{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;padding-bottom:28px}
-.kb-hint{display:flex;align-items:center;gap:5px;font-size:.67rem;color:var(--muted)}
-.kbd{display:inline-flex;align-items:center;justify-content:center;padding:2px 7px;border:1px solid var(--border);border-radius:4px;font-size:.62rem;color:var(--muted);min-width:22px}
-/* ADD CARD BUTTON */
-.add-card-btn{position:fixed;bottom:28px;right:28px;width:48px;height:48px;border-radius:50%;background:var(--gold);border:none;color:#0b0b10;font-size:1.4rem;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(201,168,76,.35);transition:all .2s;z-index:100}
-.add-card-btn:hover{transform:scale(1.1);box-shadow:0 6px 28px rgba(201,168,76,.5)}
-/* MODAL OVERLAY */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);z-index:200;display:none;align-items:center;justify-content:center;padding:20px}
-.modal-overlay.open{display:flex}
-.modal{background:var(--surface);border:1px solid var(--border);border-radius:20px;width:100%;max-width:540px;padding:32px;box-shadow:0 32px 80px rgba(0,0,0,.6);position:relative;max-height:90vh;overflow-y:auto}
-.modal h2{font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--gold);margin-bottom:6px}
-.modal p.sub{font-size:.75rem;color:var(--muted);margin-bottom:24px}
-.modal-close{position:absolute;top:16px;right:18px;background:none;border:none;color:var(--muted);font-size:1.2rem;cursor:pointer;line-height:1;padding:4px}
-.modal-close:hover{color:var(--text)}
-.field{margin-bottom:16px}
-.field label{display:block;font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px}
-.field input,.field textarea,.field select{width:100%;background:#0e0e14;border:1px solid var(--border);border-radius:8px;padding:10px 13px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:.85rem;outline:none;transition:border-color .2s;resize:vertical}
-.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--gold)}
-.field textarea{min-height:100px}
-.field select option{background:#0e0e14}
-.modal-actions{display:flex;gap:10px;margin-top:20px;justify-content:flex-end}
-/* MANAGE TAB */
-.tab-bar{display:flex;gap:0;margin-bottom:24px;border-bottom:1px solid var(--border)}
-.tab{padding:8px 18px;background:none;border:none;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:.8rem;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .2s}
-.tab.active{color:var(--gold);border-bottom-color:var(--gold)}
-.tab-content{display:none}
-.tab-content.active{display:block}
-/* CUSTOM CARD LIST */
-.custom-list{display:flex;flex-direction:column;gap:10px;max-height:320px;overflow-y:auto;padding-right:4px}
-.custom-list::-webkit-scrollbar{width:4px}
-.custom-list::-webkit-scrollbar-track{background:transparent}
-.custom-list::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
-.custom-item{background:#0e0e14;border:1px solid var(--border);border-radius:10px;padding:12px 14px;display:flex;align-items:flex-start;gap:10px}
-.custom-item-text{flex:1;min-width:0}
-.custom-item-cat{font-size:.62rem;color:var(--gold);text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px}
-.custom-item-q{font-size:.8rem;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.custom-item-btns{display:flex;gap:6px;flex-shrink:0}
-.icon-btn{width:28px;height:28px;border-radius:6px;border:1px solid var(--border);background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.8rem;transition:all .2s;color:var(--muted)}
-.icon-btn:hover.edit{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.08)}
-.icon-btn:hover.del{border-color:var(--red);color:var(--red);background:rgba(224,92,106,.08)}
-.empty-state{text-align:center;padding:32px 0;color:var(--muted);font-size:.82rem}
-.badge{display:inline-flex;align-items:center;justify-content:center;background:var(--gold);color:#0b0b10;font-size:.6rem;font-weight:700;border-radius:10px;padding:1px 6px;margin-left:5px;min-width:18px}
-/* VIEW TOGGLE */
-.view-toggle{width:100%;max-width:960px;padding:0 24px 16px;display:flex;gap:8px;position:relative;z-index:1}
-.view-btn{display:flex;align-items:center;gap:6px;padding:7px 16px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-family:'DM Sans',sans-serif;font-size:.78rem;cursor:pointer;transition:all .2s;letter-spacing:.02em}
-.view-btn:hover{border-color:var(--gold);color:var(--gold)}
-.view-btn.active{background:rgba(201,168,76,.12);border-color:var(--gold);color:var(--gold)}
-/* LIST VIEW */
-.list-view{width:100%;max-width:960px;padding:0 24px 60px;position:relative;z-index:1;display:none}
-.list-search{width:100%;background:#0e0e14;border:1px solid var(--border);border-radius:10px;padding:11px 16px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:.88rem;outline:none;transition:border-color .2s;margin-bottom:16px}
-.list-search:focus{border-color:var(--gold)}
-.list-search::placeholder{color:var(--muted)}
-.list-count{font-size:.72rem;color:var(--muted);margin-bottom:14px;letter-spacing:.03em}
-.list-group{margin-bottom:28px}
-.list-group-header{font-family:'Playfair Display',serif;font-size:.9rem;color:var(--gold);padding:8px 0;margin-bottom:10px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
-.list-group-count{font-family:'DM Sans',sans-serif;font-size:.65rem;color:var(--muted)}
-.list-item{background:var(--surface);border:1px solid var(--border);border-radius:12px;margin-bottom:8px;overflow:hidden;transition:border-color .2s}
-.list-item:hover{border-color:rgba(201,168,76,.35)}
-.list-item-header{padding:14px 18px;cursor:pointer;display:flex;align-items:flex-start;gap:12px}
-.list-item-num{font-size:.65rem;color:var(--muted);padding-top:3px;min-width:28px;flex-shrink:0}
-.list-item-q{font-family:'Playfair Display',serif;font-size:.95rem;line-height:1.5;color:var(--text);flex:1}
-.list-item-chevron{color:var(--muted);font-size:.8rem;flex-shrink:0;transition:transform .25s;padding-top:3px}
-.list-item.open .list-item-chevron{transform:rotate(90deg);color:var(--gold)}
-.list-item-answer{display:none;padding:0 18px 16px 58px;font-size:.85rem;line-height:1.8;color:#c0bdd4;border-top:1px solid var(--border);margin-top:0;padding-top:14px}
-.list-item.open .list-item-answer{display:block}
-.list-item-answer strong{color:var(--gold);font-weight:500}
-.list-item-answer ul{padding-left:18px;margin-top:6px}
-.list-item-answer li{margin-bottom:4px}
-.list-no-results{text-align:center;padding:48px 0;color:var(--muted);font-size:.88rem}
-/* FORMULA VIEW */
-.formula-view{width:100%;max-width:960px;padding:0 24px 60px;position:relative;z-index:1;display:none}
-.formula-section{margin-bottom:36px}
-.formula-section-title{font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--gold);padding:10px 0 10px;margin-bottom:14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
-.formula-section-title::before{content:'';display:inline-block;width:20px;height:1px;background:var(--gold);opacity:.6}
-.formula-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px}
-.formula-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 18px;transition:border-color .2s}
-.formula-card:hover{border-color:rgba(201,168,76,.4)}
-.formula-name{font-size:.65rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:8px}
-.formula-eq{font-family:'Playfair Display',serif;font-size:1rem;color:var(--text);line-height:1.5;margin-bottom:6px}
-.formula-eq .var{color:var(--gold)}
-.formula-eq .op{color:var(--violet);font-style:normal}
-.formula-note{font-size:.72rem;color:var(--muted);line-height:1.5;margin-top:6px}
-.formula-tag{display:inline-flex;align-items:center;font-size:.6rem;text-transform:uppercase;letter-spacing:.08em;color:var(--violet);border:1px solid rgba(139,124,246,.3);border-radius:10px;padding:1px 7px;margin-bottom:8px}
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=IBM+Plex+Mono:wght@300;400;500&family=IBM+Plex+Sans:wght@300;400;500&display=swap');
+
+:root {
+  --bg: #0c0d0f;
+  --surface: #111316;
+  --surface2: #161a1e;
+  --card-f: #13161a;
+  --card-b: #0f1215;
+  --amber: #d4a843;
+  --amber-dim: #a07f2e;
+  --amber-glow: rgba(212,168,67,.12);
+  --cyan: #3ab8c8;
+  --cyan-dim: rgba(58,184,200,.2);
+  --text: #ddd8cc;
+  --text2: #a09a8e;
+  --muted: #4a4a52;
+  --border: #1e2126;
+  --border2: #252a30;
+  --green: #2db87a;
+  --red: #c95858;
+  --radius: 4px;
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-mono: 'IBM Plex Mono', 'Courier New', monospace;
+  --font-body: 'IBM Plex Sans', sans-serif;
+}
+
+* { margin:0; padding:0; box-sizing:border-box }
+
+/* ── BACKGROUND ── */
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-weight: 300;
+}
+
+/* Fine grid texture */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(212,168,67,.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(212,168,67,.018) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Subtle vignette */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 0%, rgba(212,168,67,.04) 0%, transparent 60%),
+              radial-gradient(ellipse at 50% 100%, rgba(0,0,0,.5) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── HEADER ── */
+header {
+  width: 100%;
+  max-width: 1040px;
+  padding: 32px 32px 20px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  position: relative;
+  z-index: 1;
+  border-bottom: 1px solid var(--border2);
+  margin-bottom: 4px;
+}
+
+.logo h1 {
+  font-family: var(--font-display);
+  font-size: 1.65rem;
+  font-weight: 300;
+  color: var(--amber);
+  letter-spacing: .06em;
+  line-height: 1;
+}
+
+.logo p {
+  font-family: var(--font-mono);
+  font-size: .6rem;
+  color: var(--muted);
+  margin-top: 5px;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+}
+
+.stats { display: flex; gap: 28px; align-items: flex-end; }
+
+.stat { text-align: right; }
+
+.stat-num {
+  font-family: var(--font-mono);
+  font-size: 1.4rem;
+  color: var(--amber);
+  line-height: 1;
+  font-weight: 400;
+}
+
+.stat-label {
+  font-family: var(--font-mono);
+  font-size: .52rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: .14em;
+  margin-top: 3px;
+}
+
+/* ── FILTERS ── */
+.filters {
+  width: 100%;
+  max-width: 1040px;
+  padding: 14px 32px;
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 1;
+  border-bottom: 1px solid var(--border);
+}
+
+.filter-btn {
+  padding: 4px 12px;
+  border-radius: 2px;
+  border: 1px solid var(--border2);
+  background: transparent;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: .6rem;
+  cursor: pointer;
+  transition: all .15s;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.filter-btn:hover { border-color: var(--amber-dim); color: var(--amber); }
+.filter-btn.active { background: var(--amber); border-color: var(--amber); color: #0c0d0f; font-weight: 500; }
+
+/* ── PROGRESS ── */
+.progress-wrap {
+  width: 100%;
+  max-width: 1040px;
+  padding: 12px 32px 14px;
+  position: relative;
+  z-index: 1;
+}
+
+.pb-bg { height: 1px; background: var(--border2); overflow: hidden; }
+
+.pb-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--amber-dim), var(--amber));
+  transition: width .5s cubic-bezier(.4,0,.2,1);
+}
+
+.pb-labels {
+  font-family: var(--font-mono);
+  font-size: .58rem;
+  color: var(--muted);
+  margin-top: 5px;
+  display: flex;
+  justify-content: space-between;
+  letter-spacing: .06em;
+}
+
+/* ── VIEW TOGGLE ── */
+.view-toggle {
+  width: 100%;
+  max-width: 1040px;
+  padding: 12px 32px;
+  display: flex;
+  gap: 0;
+  position: relative;
+  z-index: 1;
+  border-bottom: 1px solid var(--border2);
+}
+
+.view-btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 20px;
+  border: none;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: .65rem;
+  cursor: pointer;
+  transition: all .15s;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  margin-bottom: -1px;
+}
+
+.view-btn:hover { color: var(--text2); }
+.view-btn.active { color: var(--amber); border-bottom-color: var(--amber); }
+
+/* ── CARD ── */
+.card-area {
+  width: 100%;
+  max-width: 820px;
+  padding: 28px 32px 0;
+  perspective: 1600px;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.card-wrap { width: 100%; cursor: pointer; margin-bottom: 20px; }
+
+.card {
+  width: 100%;
+  min-height: 320px;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform .6s cubic-bezier(.4,.2,.2,1);
+}
+
+.card.flipped { transform: rotateY(180deg); }
+
+.card-face {
+  position: absolute;
+  width: 100%;
+  min-height: 320px;
+  backface-visibility: hidden;
+  border-radius: var(--radius);
+  padding: 40px 48px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.card-front {
+  background: var(--card-f);
+  border: 1px solid var(--border2);
+  border-top: 2px solid var(--amber);
+  box-shadow: 0 20px 60px rgba(0,0,0,.5), inset 0 1px 0 rgba(212,168,67,.06);
+}
+
+.card-back {
+  background: var(--card-b);
+  border: 1px solid var(--border2);
+  border-top: 2px solid var(--cyan);
+  box-shadow: 0 20px 60px rgba(0,0,0,.5), inset 0 1px 0 rgba(58,184,200,.06);
+  transform: rotateY(180deg);
+}
+
+.card-num {
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  font-family: var(--font-mono);
+  font-size: .58rem;
+  color: var(--muted);
+  letter-spacing: .06em;
+}
+
+.card-tag {
+  font-family: var(--font-mono);
+  font-size: .58rem;
+  text-transform: uppercase;
+  letter-spacing: .18em;
+  color: var(--amber);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.card-tag::before {
+  content: '▸';
+  font-size: .5rem;
+  opacity: .7;
+}
+
+.card-back .card-tag { color: var(--cyan); }
+
+.card-q {
+  font-family: var(--font-display);
+  font-size: 1.55rem;
+  font-weight: 300;
+  line-height: 1.5;
+  color: var(--text);
+  letter-spacing: .01em;
+}
+
+.flip-hint {
+  position: absolute;
+  bottom: 16px;
+  right: 20px;
+  font-family: var(--font-mono);
+  font-size: .55rem;
+  color: var(--muted);
+  opacity: .5;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.card.flipped .flip-hint { display: none; }
+
+.card-a {
+  font-size: .875rem;
+  line-height: 1.85;
+  color: var(--text2);
+  font-weight: 300;
+}
+
+.card-a strong { color: var(--amber); font-weight: 400; }
+.card-a ul { padding-left: 16px; margin-top: 6px; }
+.card-a li { margin-bottom: 4px; }
+
+/* ── CONTROLS ── */
+.controls {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 22px;
+  border-radius: 2px;
+  border: 1px solid var(--border2);
+  background: transparent;
+  color: var(--text2);
+  font-family: var(--font-mono);
+  font-size: .68rem;
+  cursor: pointer;
+  transition: all .15s;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.btn:hover { border-color: var(--amber-dim); color: var(--amber); }
+.btn.know { border-color: rgba(45,184,122,.4); color: var(--green); }
+.btn.know:hover { background: rgba(45,184,122,.07); }
+.btn.skip { border-color: rgba(201,88,88,.4); color: var(--red); }
+.btn.skip:hover { background: rgba(201,88,88,.07); }
+.btn.primary { background: var(--amber); border-color: var(--amber); color: #0c0d0f; font-weight: 500; }
+.btn.primary:hover { background: #c49838; border-color: #c49838; }
+
+/* ── COMPLETE SCREEN ── */
+.complete-screen {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 64px 32px;
+  max-width: 480px;
+  margin: 0 auto;
+}
+.complete-screen.show { display: flex; }
+.complete-icon { font-size: 2.4rem; margin-bottom: 16px; }
+.complete-screen h2 { font-family: var(--font-display); font-size: 2rem; font-weight: 300; color: var(--amber); margin-bottom: 8px; letter-spacing: .04em; }
+.complete-screen p { color: var(--muted); margin-bottom: 28px; line-height: 1.7; font-size: .88rem; }
+.score-grid { display: flex; gap: 40px; margin-bottom: 32px; }
+.score-num { font-family: var(--font-mono); font-size: 2.2rem; line-height: 1; }
+.score-num.g { color: var(--green); }
+.score-num.r { color: var(--red); }
+.score-label { font-family: var(--font-mono); font-size: .55rem; color: var(--muted); text-transform: uppercase; letter-spacing: .14em; margin-top: 4px; }
+
+/* ── KEYBOARD HINTS ── */
+.kb-hints { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; padding-bottom: 32px; }
+.kb-hint { display: flex; align-items: center; gap: 5px; font-family: var(--font-mono); font-size: .6rem; color: var(--muted); }
+.kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 7px;
+  border: 1px solid var(--border2);
+  border-radius: 2px;
+  font-family: var(--font-mono);
+  font-size: .58rem;
+  color: var(--muted);
+  min-width: 22px;
+  background: var(--surface);
+}
+
+/* ── ADD CARD BUTTON ── */
+.add-card-btn {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  width: 44px;
+  height: 44px;
+  border-radius: 2px;
+  background: var(--amber);
+  border: none;
+  color: #0c0d0f;
+  font-size: 1.3rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 24px rgba(212,168,67,.3);
+  transition: all .2s;
+  z-index: 100;
+}
+.add-card-btn:hover { background: #c49838; transform: translateY(-2px); box-shadow: 0 8px 32px rgba(212,168,67,.4); }
+
+/* ── MODAL ── */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.75); backdrop-filter: blur(6px); z-index: 200; display: none; align-items: center; justify-content: center; padding: 20px; }
+.modal-overlay.open { display: flex; }
+.modal {
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-top: 2px solid var(--amber);
+  border-radius: var(--radius);
+  width: 100%;
+  max-width: 540px;
+  padding: 36px;
+  box-shadow: 0 40px 100px rgba(0,0,0,.7);
+  position: relative;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+.modal h2 { font-family: var(--font-display); font-size: 1.4rem; font-weight: 300; color: var(--amber); margin-bottom: 4px; letter-spacing: .04em; }
+.modal p.sub { font-family: var(--font-mono); font-size: .62rem; color: var(--muted); margin-bottom: 24px; letter-spacing: .06em; }
+.modal-close { position: absolute; top: 16px; right: 18px; background: none; border: none; color: var(--muted); font-size: 1.1rem; cursor: pointer; }
+.modal-close:hover { color: var(--text); }
+.field { margin-bottom: 16px; }
+.field label { display: block; font-family: var(--font-mono); font-size: .6rem; color: var(--muted); text-transform: uppercase; letter-spacing: .12em; margin-bottom: 7px; }
+.field input, .field textarea, .field select {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--border2);
+  border-radius: 2px;
+  padding: 10px 13px;
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: .85rem;
+  font-weight: 300;
+  outline: none;
+  transition: border-color .15s;
+  resize: vertical;
+}
+.field input:focus, .field textarea:focus, .field select:focus { border-color: var(--amber-dim); }
+.field textarea { min-height: 100px; }
+.field select option { background: var(--bg); }
+.modal-actions { display: flex; gap: 10px; margin-top: 20px; justify-content: flex-end; }
+
+/* ── TABS ── */
+.tab-bar { display: flex; margin-bottom: 24px; border-bottom: 1px solid var(--border2); }
+.tab { padding: 8px 18px; background: none; border: none; border-bottom: 2px solid transparent; margin-bottom: -1px; color: var(--muted); font-family: var(--font-mono); font-size: .62rem; cursor: pointer; text-transform: uppercase; letter-spacing: .1em; transition: all .15s; }
+.tab.active { color: var(--amber); border-bottom-color: var(--amber); }
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* ── CUSTOM LIST ── */
+.custom-list { display: flex; flex-direction: column; gap: 8px; max-height: 320px; overflow-y: auto; padding-right: 4px; }
+.custom-list::-webkit-scrollbar { width: 3px; }
+.custom-list::-webkit-scrollbar-track { background: transparent; }
+.custom-list::-webkit-scrollbar-thumb { background: var(--border2); }
+.custom-item { background: var(--bg); border: 1px solid var(--border2); border-radius: 2px; padding: 12px 14px; display: flex; align-items: flex-start; gap: 10px; }
+.custom-item-text { flex: 1; min-width: 0; }
+.custom-item-cat { font-family: var(--font-mono); font-size: .58rem; color: var(--amber); text-transform: uppercase; letter-spacing: .1em; margin-bottom: 3px; }
+.custom-item-q { font-size: .8rem; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.custom-item-btns { display: flex; gap: 6px; flex-shrink: 0; }
+.icon-btn { width: 28px; height: 28px; border-radius: 2px; border: 1px solid var(--border2); background: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: .8rem; transition: all .15s; color: var(--muted); }
+.icon-btn:hover.edit { border-color: var(--amber-dim); color: var(--amber); }
+.icon-btn:hover.del { border-color: rgba(201,88,88,.5); color: var(--red); }
+.empty-state { text-align: center; padding: 32px 0; color: var(--muted); font-size: .82rem; }
+.badge { display: inline-flex; align-items: center; justify-content: center; background: var(--amber); color: #0c0d0f; font-family: var(--font-mono); font-size: .55rem; font-weight: 600; border-radius: 2px; padding: 1px 6px; margin-left: 5px; }
+
+/* ── LIST VIEW ── */
+.list-view { width: 100%; max-width: 1040px; padding: 20px 32px 60px; position: relative; z-index: 1; display: none; }
+
+.list-search {
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 2px;
+  padding: 12px 16px;
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: .88rem;
+  font-weight: 300;
+  outline: none;
+  transition: border-color .15s;
+  margin-bottom: 16px;
+}
+.list-search:focus { border-color: var(--amber-dim); }
+.list-search::placeholder { color: var(--muted); }
+
+.list-count { font-family: var(--font-mono); font-size: .6rem; color: var(--muted); margin-bottom: 20px; letter-spacing: .08em; text-transform: uppercase; }
+
+.list-group { margin-bottom: 32px; }
+
+.list-group-header {
+  font-family: var(--font-mono);
+  font-size: .65rem;
+  color: var(--amber);
+  padding: 8px 0;
+  margin-bottom: 10px;
+  border-bottom: 1px solid var(--border2);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+}
+.list-group-count { font-size: .58rem; color: var(--muted); }
+
+.list-item { background: var(--surface); border: 1px solid var(--border); border-left: 2px solid transparent; margin-bottom: 4px; overflow: hidden; transition: all .15s; border-radius: 2px; }
+.list-item:hover { border-left-color: var(--amber-dim); border-color: var(--border2); }
+.list-item.open { border-left-color: var(--amber); }
+
+.list-item-header { padding: 13px 16px; cursor: pointer; display: flex; align-items: flex-start; gap: 14px; }
+.list-item-num { font-family: var(--font-mono); font-size: .58rem; color: var(--muted); padding-top: 4px; min-width: 30px; flex-shrink: 0; }
+.list-item-q { font-family: var(--font-display); font-size: 1rem; font-weight: 300; line-height: 1.45; color: var(--text); flex: 1; }
+.list-item-chevron { color: var(--muted); font-size: .7rem; flex-shrink: 0; transition: transform .2s; padding-top: 4px; }
+.list-item.open .list-item-chevron { transform: rotate(90deg); color: var(--amber); }
+.list-item-answer { display: none; padding: 0 16px 16px 58px; font-size: .85rem; line-height: 1.85; color: var(--text2); border-top: 1px solid var(--border); padding-top: 14px; font-weight: 300; }
+.list-item.open .list-item-answer { display: block; }
+.list-item-answer strong { color: var(--amber); font-weight: 400; }
+.list-no-results { text-align: center; padding: 56px 0; color: var(--muted); font-family: var(--font-mono); font-size: .72rem; text-transform: uppercase; letter-spacing: .1em; }
+
+/* ── FORMULA VIEW ── */
+.formula-view { width: 100%; max-width: 1040px; padding: 20px 32px 60px; position: relative; z-index: 1; display: none; }
+
+.formula-section { margin-bottom: 40px; }
+
+.formula-section-title {
+  font-family: var(--font-mono);
+  font-size: .65rem;
+  color: var(--amber);
+  padding: 8px 0;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--border2);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  text-transform: uppercase;
+  letter-spacing: .16em;
+}
+.formula-section-title::after { content: attr(data-count); font-size: .55rem; color: var(--muted); }
+
+.formula-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 8px; }
+
+.formula-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 2px solid var(--border2);
+  border-radius: 2px;
+  padding: 18px 20px;
+  transition: all .15s;
+}
+.formula-card:hover { border-left-color: var(--amber); border-color: var(--border2); background: var(--surface2); }
+
+.formula-name {
+  font-family: var(--font-mono);
+  font-size: .58rem;
+  text-transform: uppercase;
+  letter-spacing: .14em;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+
+.formula-eq {
+  font-family: var(--font-mono);
+  font-size: .92rem;
+  color: var(--text);
+  line-height: 1.6;
+  margin-bottom: 0;
+  font-weight: 400;
+}
+.formula-eq .var { color: var(--amber); }
+.formula-eq .op { color: var(--text2); }
+
+.formula-worded {
+  font-family: var(--font-body);
+  font-size: .78rem;
+  font-weight: 300;
+  color: var(--text2);
+  line-height: 1.7;
+  margin: 10px 0 8px;
+  padding: 10px 12px;
+  border-left: 2px solid rgba(58,184,200,.3);
+  background: rgba(58,184,200,.03);
+  font-style: italic;
+}
+
+.formula-note {
+  font-family: var(--font-mono);
+  font-size: .62rem;
+  color: var(--muted);
+  line-height: 1.55;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+}
+
+.formula-tag { display: none; }
+
+/* ── TICKER TAPE ── */
+.ticker-wrap {
+  width: 100%;
+  background: #0a0b0d;
+  border-bottom: 1px solid var(--border2);
+  overflow: hidden;
+  position: relative;
+  z-index: 2;
+  height: 28px;
+  display: flex;
+  align-items: center;
+}
+
+.ticker-wrap::before,
+.ticker-wrap::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 80px;
+  z-index: 3;
+  pointer-events: none;
+}
+.ticker-wrap::before { left: 0; background: linear-gradient(90deg, #0a0b0d, transparent); }
+.ticker-wrap::after  { right: 0; background: linear-gradient(-90deg, #0a0b0d, transparent); }
+
+.ticker {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  white-space: nowrap;
+  animation: ticker-scroll 55s linear infinite;
+  will-change: transform;
+}
+
+@keyframes ticker-scroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.tick {
+  font-family: var(--font-mono);
+  font-size: .58rem;
+  letter-spacing: .1em;
+  color: var(--muted);
+  padding: 0 18px;
+  text-transform: uppercase;
+}
+
+.tick-val { margin-left: 6px; font-weight: 500; }
+.tick.tick-up .tick-val  { color: var(--green); }
+.tick.tick-down .tick-val { color: var(--red); }
+.tick-sep { color: var(--border2); font-size: .7rem; }
+
+/* ── LOGO EYEBROW ── */
+.logo-eyebrow {
+  font-family: var(--font-mono);
+  font-size: .52rem;
+  letter-spacing: .22em;
+  color: var(--amber-dim);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+/* ── STAT COLORS ── */
+.stat-num.g { color: var(--green); }
+.stat-num.r { color: var(--red); }
+
+/* ── ENTRY ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+header         { animation: fadeUp .5s ease both; }
+.filters       { animation: fadeUp .5s .08s ease both; }
+.progress-wrap { animation: fadeUp .5s .14s ease both; }
+.view-toggle   { animation: fadeUp .5s .18s ease both; }
+.card-area     { animation: fadeUp .5s .22s ease both; }
+
+/* ── CARD GLOW ON HOVER ── */
+.card-wrap:hover .card-front {
+  box-shadow: 0 24px 80px rgba(0,0,0,.6), 0 0 0 1px rgba(212,168,67,.1), inset 0 1px 0 rgba(212,168,67,.08);
+}
+
+/* ── FLIP HINT PULSE ── */
+@keyframes hint-pulse {
+  0%, 100% { opacity: .4; }
+  50%       { opacity: .9; }
+}
+.flip-hint { animation: hint-pulse 2.5s ease-in-out infinite; }
+.card.flipped .flip-hint { display: none; }
+
+/* ── SCROLLBAR GLOBAL ── */
+::-webkit-scrollbar       { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
 </style>
 </head>
 <body>
+
+<!-- TICKER TAPE -->
+<div class="ticker-wrap">
+  <div class="ticker">
+    <span class="tick tick-up">DCF&nbsp;ANALYSIS <span class="tick-val">▲ TERMINAL VALUE</span></span>
+    <span class="tick-sep">·</span>
+    <span class="tick tick-up">WACC <span class="tick-val">▲ 8.5%</span></span>
+    <span class="tick-sep">·</span>
+    <span class="tick tick-down">LEVERAGE <span class="tick-val">▼ 5.2×</span></span>
+    <span class="tick-sep">·</span>
+    <span class="tick tick-up">EV/EBITDA <span class="tick-val">▲ 12.4×</span></span>
+    <span class="tick-sep">·</span>
+    <span class="tick tick-up">IRR TARGET <span class="tick-val">▲ 22%</span></span>
+    <span class="tick-sep">·</span>
+    <span class="tick tick-down">P/E RATIO <span class="tick-val">▼ 18.3×</span></span>
+    <span class="tick-sep">·</span>
+    <span class="tick tick-up">EQUITY VALUE <span class="tick-val">▲ $2.4B</span></span>
+    <span class="tick-sep">·</span>
+    <span class="tick tick-up">EBITDA MARGIN <span class="tick-val">▲ 34.2%</span></span>
+    <span class="tick-sep">·</span>
+    <span class="tick tick-down">DEBT/EBITDA <span class="tick-val">▼ 4.1×</span></span>
+    <span class="tick-sep">·</span>
+    <span class="tick tick-up">LBO RETURNS <span class="tick-val">▲ 3.1×</span></span>
+    <span class="tick-sep">·</span>
+    <span class="tick tick-up">FCF YIELD <span class="tick-val">▲ 6.8%</span></span>
+    <span class="tick-sep">·</span>
+    <span class="tick tick-down">BETA <span class="tick-val">▼ 0.87</span></span>
+    <span class="tick-sep">·</span>
+    <span class="tick tick-up">COST OF EQUITY <span class="tick-val">▲ 10.2%</span></span>
+    <span class="tick-sep">·</span>
+    <span class="tick tick-up">M&amp;A PREMIUM <span class="tick-val">▲ 28%</span></span>
+    <!-- duplicate for seamless loop -->
+    <span class="tick tick-up">DCF&nbsp;ANALYSIS <span class="tick-val">▲ TERMINAL VALUE</span></span>
+    <span class="tick-sep">·</span>
+    <span class="tick tick-up">WACC <span class="tick-val">▲ 8.5%</span></span>
+    <span class="tick-sep">·</span>
+    <span class="tick tick-down">LEVERAGE <span class="tick-val">▼ 5.2×</span></span>
+    <span class="tick-sep">·</span>
+    <span class="tick tick-up">EV/EBITDA <span class="tick-val">▲ 12.4×</span></span>
+    <span class="tick-sep">·</span>
+    <span class="tick tick-up">IRR TARGET <span class="tick-val">▲ 22%</span></span>
+    <span class="tick-sep">·</span>
+    <span class="tick tick-down">P/E RATIO <span class="tick-val">▼ 18.3×</span></span>
+    <span class="tick-sep">·</span>
+    <span class="tick tick-up">EQUITY VALUE <span class="tick-val">▲ $2.4B</span></span>
+  </div>
+</div>
+
 <header>
-  <div class="logo"><h1>IB Interview Flashcards</h1><p>Full Technical Edition · 400 Questions Guide 2025</p></div>
+  <div class="logo">
+    <div class="logo-eyebrow">INVESTMENT BANKING</div>
+    <h1>Technical Interview Guide</h1>
+    <p>400 Questions · Full Technical Edition · 2025</p>
+  </div>
   <div class="stats">
-    <div class="stat"><div class="stat-num" id="s-know">0</div><div class="stat-label">Know It</div></div>
-    <div class="stat"><div class="stat-num" id="s-rev">0</div><div class="stat-label">Review</div></div>
-    <div class="stat"><div class="stat-num" id="s-tot">0</div><div class="stat-label">Cards</div></div>
+    <div class="stat">
+      <div class="stat-num g" id="s-know">0</div>
+      <div class="stat-label">Mastered</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num r" id="s-rev">0</div>
+      <div class="stat-label">Review</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num" id="s-tot">0</div>
+      <div class="stat-label">Total</div>
+    </div>
   </div>
 </header>
 <div class="filters" id="filters"></div>
@@ -170,9 +796,9 @@ header{width:100%;max-width:960px;padding:28px 24px 12px;display:flex;align-item
 </div>
 <!-- View Toggle -->
 <div class="view-toggle">
-  <button class="view-btn active" id="vbtn-flash" onclick="setView('flashcard')">🃏 Flashcards</button>
-  <button class="view-btn" id="vbtn-list" onclick="setView('list')">📋 Browse All</button>
-  <button class="view-btn" id="vbtn-formulas" onclick="setView('formulas')">∑ Formulas</button>
+  <button class="view-btn active" id="vbtn-flash" onclick="setView('flashcard')">FLASHCARDS</button>
+  <button class="view-btn" id="vbtn-list" onclick="setView('list')">BROWSE ALL</button>
+  <button class="view-btn" id="vbtn-formulas" onclick="setView('formulas')">FORMULA SHEET</button>
 </div>
 
 <!-- List View -->
@@ -191,31 +817,37 @@ header{width:100%;max-width:960px;padding:28px 24px 12px;display:flex;align-item
       <div class="formula-card">
         <div class="formula-name">Perpetuity (No Growth)</div>
         <div class="formula-eq"><span class="var">Value</span> <span class="op">=</span> <span class="var">Cash Flow</span> <span class="op">/</span> <span class="var">Discount Rate</span></div>
+        <div class="formula-worded">Company Value equals Cash Flow divided by the Discount Rate.</div>
         <div class="formula-note">Use when cash flow is constant forever. e.g. $100 / 10% = $1,000.</div>
       </div>
       <div class="formula-card">
         <div class="formula-name">Gordon Growth Model</div>
         <div class="formula-eq"><span class="var">Value</span> <span class="op">=</span> <span class="var">CF</span> <span class="op">/</span> (<span class="var">r</span> <span class="op">−</span> <span class="var">g</span>)</div>
+        <div class="formula-worded">Company Value equals Cash Flow divided by the Discount Rate minus the long-term Growth Rate.</div>
         <div class="formula-note">Requires g &lt; r. e.g. $100 / (10% − 5%) = $2,000. Also used for DCF Terminal Value.</div>
       </div>
       <div class="formula-card">
         <div class="formula-name">Enterprise Value</div>
         <div class="formula-eq"><span class="var">TEV</span> <span class="op">=</span> <span class="var">Equity Value</span> <span class="op">+</span> <span class="var">Debt</span> <span class="op">+</span> <span class="var">Preferred</span> <span class="op">+</span> <span class="var">Minority Interest</span> <span class="op">−</span> <span class="var">Cash</span></div>
+        <div class="formula-worded">Total Enterprise Value equals Equity Value plus Debt plus Preferred Stock plus Minority Interest minus Cash.</div>
         <div class="formula-note">Represents total cost to acquire the business. Capital-structure neutral.</div>
       </div>
       <div class="formula-card">
         <div class="formula-name">Equity Value (Market Cap)</div>
         <div class="formula-eq"><span class="var">Equity Value</span> <span class="op">=</span> <span class="var">Share Price</span> <span class="op">×</span> <span class="var">Diluted Shares</span></div>
+        <div class="formula-worded">Equity Value equals Share Price multiplied by Diluted Shares Outstanding.</div>
         <div class="formula-note">Value to common shareholders only. Always use diluted share count.</div>
       </div>
       <div class="formula-card">
         <div class="formula-name">Treasury Stock Method (Options)</div>
         <div class="formula-eq"><span class="var">Net New Shares</span> <span class="op">=</span> <span class="var">Options</span> <span class="op">−</span> (<span class="var">Proceeds</span> <span class="op">/</span> <span class="var">Share Price</span>)</div>
-        <div class="formula-note">Proceeds = Options × Strike Price. Only applies when in-the-money (Strike &lt; Price).</div>
+        <div class="formula-worded">Net New Shares equals the number of Options minus the number of shares repurchased with the exercise proceeds, where proceeds equal Options multiplied by the Strike Price.</div>
+        <div class="formula-note">Only applies when in-the-money (Strike &lt; Price).</div>
       </div>
       <div class="formula-card">
         <div class="formula-name">EV / EBITDA Multiple</div>
         <div class="formula-eq"><span class="var">Multiple</span> <span class="op">=</span> <span class="var">TEV</span> <span class="op">/</span> <span class="var">EBITDA</span></div>
+        <div class="formula-worded">The EV to EBITDA multiple equals Total Enterprise Value divided by Earnings Before Interest, Taxes, Depreciation, and Amortization.</div>
         <div class="formula-note">Most common EV-based multiple. Pair EV with metrics that don't deduct interest (EBIT, Revenue, EBITDA).</div>
       </div>
     </div>
@@ -227,31 +859,37 @@ header{width:100%;max-width:960px;padding:28px 24px 12px;display:flex;align-item
       <div class="formula-card">
         <div class="formula-name">Unlevered Free Cash Flow (UFCF)</div>
         <div class="formula-eq"><span class="var">UFCF</span> <span class="op">=</span> <span class="var">EBIT</span> <span class="op">×</span> (1 <span class="op">−</span> <span class="var">t</span>) <span class="op">+</span> <span class="var">D&A</span> <span class="op">−</span> <span class="var">CapEx</span> <span class="op">−</span> <span class="var">ΔNWC</span></div>
+        <div class="formula-worded">Unlevered Free Cash Flow equals EBIT multiplied by one minus the Tax Rate, plus Depreciation and Amortization, minus Capital Expenditures, minus the Change in Net Working Capital.</div>
         <div class="formula-note">Also called FCFF. "Unlevered" = before interest. Discounted at WACC.</div>
       </div>
       <div class="formula-card">
         <div class="formula-name">Terminal Value — Gordon Growth</div>
         <div class="formula-eq"><span class="var">TV</span> <span class="op">=</span> <span class="var">FCF<sub>n</sub></span> <span class="op">×</span> (1 <span class="op">+</span> <span class="var">g</span>) <span class="op">/</span> (<span class="var">WACC</span> <span class="op">−</span> <span class="var">g</span>)</div>
+        <div class="formula-worded">Terminal Value equals the final year Free Cash Flow multiplied by one plus the long-term Growth Rate, divided by WACC minus the long-term Growth Rate.</div>
         <div class="formula-note">Long-term growth rate ≈ nominal GDP (1.5–3%). TV typically = 60–80% of total DCF value.</div>
       </div>
       <div class="formula-card">
         <div class="formula-name">Terminal Value — Exit Multiple</div>
         <div class="formula-eq"><span class="var">TV</span> <span class="op">=</span> <span class="var">EBITDA<sub>n</sub></span> <span class="op">×</span> <span class="var">Exit Multiple</span></div>
-        <div class="formula-note">Exit multiple based on current comparable company multiples. Cross-check with Gordon Growth.</div>
+        <div class="formula-worded">Terminal Value equals the final year EBITDA multiplied by the Exit Multiple derived from comparable company multiples.</div>
+        <div class="formula-note">Cross-check with Gordon Growth. Both methods should produce similar results.</div>
       </div>
       <div class="formula-card">
         <div class="formula-name">WACC</div>
         <div class="formula-eq"><span class="var">WACC</span> <span class="op">=</span> (<span class="var">E/V</span>) <span class="op">×</span> <span class="var">Ke</span> <span class="op">+</span> (<span class="var">D/V</span>) <span class="op">×</span> <span class="var">Kd</span> <span class="op">×</span> (1 <span class="op">−</span> <span class="var">t</span>)</div>
+        <div class="formula-worded">WACC equals the Equity weight multiplied by the Cost of Equity, plus the Debt weight multiplied by the Cost of Debt multiplied by one minus the Tax Rate.</div>
         <div class="formula-note">V = E + D. Use market value of Equity; book value of Debt. Add Preferred if applicable.</div>
       </div>
       <div class="formula-card">
         <div class="formula-name">Cost of Equity — CAPM</div>
         <div class="formula-eq"><span class="var">Ke</span> <span class="op">=</span> <span class="var">Rf</span> <span class="op">+</span> <span class="var">β</span> <span class="op">×</span> <span class="var">ERP</span></div>
+        <div class="formula-worded">The Cost of Equity equals the Risk-Free Rate plus Beta multiplied by the Equity Risk Premium.</div>
         <div class="formula-note">Rf = 10-yr govt bond. ERP ≈ 5–7%. β reflects both business risk and leverage risk.</div>
       </div>
       <div class="formula-card">
         <div class="formula-name">Unlever Beta</div>
         <div class="formula-eq"><span class="var">βu</span> <span class="op">=</span> <span class="var">βL</span> <span class="op">/</span> (1 <span class="op">+</span> <span class="var">D/E</span> <span class="op">×</span> (1 <span class="op">−</span> <span class="var">t</span>))</div>
+        <div class="formula-worded">Unlevered Beta equals Levered Beta divided by the quantity one plus the Debt-to-Equity ratio multiplied by one minus the Tax Rate.</div>
         <div class="formula-note">Removes effect of leverage to isolate pure business risk. Always βu ≤ βL. Relever using target's D/E.</div>
       </div>
     </div>
@@ -263,31 +901,37 @@ header{width:100%;max-width:960px;padding:28px 24px 12px;display:flex;align-item
       <div class="formula-card">
         <div class="formula-name">EBITDA</div>
         <div class="formula-eq"><span class="var">EBITDA</span> <span class="op">=</span> <span class="var">Operating Income</span> <span class="op">+</span> <span class="var">D&A</span></div>
+        <div class="formula-worded">EBITDA equals Operating Income plus Depreciation and Amortization added back from the Cash Flow Statement.</div>
         <div class="formula-note">Add back D&A from Cash Flow Statement (often buried in COGS/SG&A on the Income Statement).</div>
       </div>
       <div class="formula-card">
         <div class="formula-name">Free Cash Flow (Simple)</div>
         <div class="formula-eq"><span class="var">FCF</span> <span class="op">=</span> <span class="var">Cash Flow from Operations</span> <span class="op">−</span> <span class="var">CapEx</span></div>
+        <div class="formula-worded">Free Cash Flow equals Cash Flow from Operations minus Capital Expenditures.</div>
         <div class="formula-note">Represents discretionary cash flow after funding the business. Positive & growing = self-sufficient.</div>
       </div>
       <div class="formula-card">
         <div class="formula-name">Working Capital</div>
         <div class="formula-eq"><span class="var">NWC</span> <span class="op">=</span> <span class="var">Operating Current Assets</span> <span class="op">−</span> <span class="var">Operating Current Liabilities</span></div>
-        <div class="formula-note">Exclude Cash, Investments, and Debt. Increase in NWC = use of cash (negative on CFS).</div>
+        <div class="formula-worded">Net Working Capital equals Operating Current Assets minus Operating Current Liabilities, excluding Cash, Investments, and Debt.</div>
+        <div class="formula-note">Increase in NWC = use of cash (negative on CFS).</div>
       </div>
       <div class="formula-card">
         <div class="formula-name">ROIC</div>
         <div class="formula-eq"><span class="var">ROIC</span> <span class="op">=</span> <span class="var">NOPAT</span> <span class="op">/</span> <span class="var">Invested Capital</span></div>
-        <div class="formula-note">NOPAT = Operating Income × (1−t). Invested Capital = Equity + Debt + Preferred − Cash.</div>
+        <div class="formula-worded">Return on Invested Capital equals Net Operating Profit After Tax divided by Invested Capital, where NOPAT equals Operating Income multiplied by one minus the Tax Rate, and Invested Capital equals Equity plus Debt plus Preferred Stock minus Cash.</div>
+        <div class="formula-note">Capital-structure neutral profitability measure.</div>
       </div>
       <div class="formula-card">
         <div class="formula-name">Net Interest Margin (Banks)</div>
         <div class="formula-eq"><span class="var">NIM</span> <span class="op">=</span> (Interest Income <span class="op">−</span> Interest Expense) <span class="op">/</span> <span class="var">Avg Earning Assets</span></div>
+        <div class="formula-worded">Net Interest Margin equals Interest Income minus Interest Expense, divided by Average Earning Assets.</div>
         <div class="formula-note">Core bank profitability metric. Rising rates usually expand NIM if loans reprice faster than deposits.</div>
       </div>
       <div class="formula-card">
         <div class="formula-name">Net Operating Loss (DTA)</div>
         <div class="formula-eq"><span class="var">DTA from NOL</span> <span class="op">≈</span> <span class="var">Tax Rate</span> <span class="op">×</span> <span class="var">NOL Balance</span></div>
+        <div class="formula-worded">The Deferred Tax Asset arising from a Net Operating Loss is approximately equal to the Tax Rate multiplied by the NOL Balance.</div>
         <div class="formula-note">NOLs can offset up to 80% of future taxable income (U.S. post-TCJA). Key in M&A analysis.</div>
       </div>
     </div>
@@ -299,32 +943,38 @@ header{width:100%;max-width:960px;padding:28px 24px 12px;display:flex;align-item
       <div class="formula-card">
         <div class="formula-name">Equity Proceeds (LBO Exit)</div>
         <div class="formula-eq"><span class="var">Equity Proceeds</span> <span class="op">=</span> <span class="var">Exit EV</span> <span class="op">−</span> <span class="var">Remaining Debt</span></div>
+        <div class="formula-worded">Equity Proceeds equal the Exit Enterprise Value minus the Remaining Debt at exit, where Exit EV equals Exit Year EBITDA multiplied by the Exit Multiple, and Remaining Debt equals Initial Debt minus Debt Repaid over the holding period.</div>
         <div class="formula-note">Exit EV = Exit Year EBITDA × Exit Multiple. Remaining Debt = Initial Debt − Debt Repaid.</div>
       </div>
       <div class="formula-card">
         <div class="formula-name">Money-on-Money Multiple (MoM)</div>
         <div class="formula-eq"><span class="var">MoM</span> <span class="op">=</span> <span class="var">Equity Proceeds</span> <span class="op">/</span> <span class="var">Initial Equity</span></div>
-        <div class="formula-note">Initial Equity = Purchase EV × Equity %. Simple return measure, ignores time value.</div>
+        <div class="formula-worded">The Money-on-Money multiple equals Equity Proceeds at exit divided by the Initial Equity invested, where Initial Equity equals Purchase Enterprise Value multiplied by the Equity percentage.</div>
+        <div class="formula-note">Simple return measure, ignores time value of money.</div>
       </div>
       <div class="formula-card">
         <div class="formula-name">IRR Rules of Thumb (5 years)</div>
         <div class="formula-eq">2x <span class="op">≈</span> 15% · 2.5x <span class="op">≈</span> 20% · 3x <span class="op">≈</span> 25%</div>
-        <div class="formula-note">Same MoM over fewer years = higher IRR. 2x in 3 yrs ≈ 26%. 3x in 3 yrs ≈ 44%.</div>
+        <div class="formula-worded">A 2x Money-on-Money multiple over five years corresponds to approximately 15% IRR; 2.5x corresponds to approximately 20% IRR; and 3x corresponds to approximately 25% IRR. The same multiple achieved in fewer years produces a higher IRR.</div>
+        <div class="formula-note">2x in 3 yrs ≈ 26%. 3x in 3 yrs ≈ 44%.</div>
       </div>
       <div class="formula-card">
         <div class="formula-name">LBO FCF (for Debt Repayment)</div>
         <div class="formula-eq"><span class="var">FCF</span> <span class="op">=</span> <span class="var">EBITDA</span> <span class="op">−</span> <span class="var">Net Interest</span> <span class="op">−</span> <span class="var">Cash Taxes</span> <span class="op">±</span> <span class="var">ΔNWC</span> <span class="op">−</span> <span class="var">CapEx</span></div>
-        <div class="formula-note">Cash available for debt repayment = Beginning Cash + FCF − Min Cash − Mandatory Repayments.</div>
+        <div class="formula-worded">LBO Free Cash Flow equals EBITDA minus Net Interest Expense minus Cash Taxes, plus or minus the Change in Net Working Capital, minus Capital Expenditures. Cash available for optional debt repayment equals Beginning Cash plus Free Cash Flow minus Minimum Cash minus Mandatory Debt Repayments.</div>
+        <div class="formula-note">This is the cash available to sweep down debt each year.</div>
       </div>
       <div class="formula-card">
         <div class="formula-name">Debt Capacity (LevFin)</div>
         <div class="formula-eq"><span class="var">Max Debt</span> <span class="op">=</span> <span class="var">EBITDA</span> <span class="op">×</span> <span class="var">Max Debt/EBITDA</span></div>
-        <div class="formula-note">Typical LBO leverage: 4–6× EBITDA. Also check EBITDA/Interest ≥ 2–2.5× (coverage ratio).</div>
+        <div class="formula-worded">Maximum Debt equals EBITDA multiplied by the maximum Debt to EBITDA leverage ratio that lenders will accept, typically 4 to 6 times for LBO transactions.</div>
+        <div class="formula-note">Also check EBITDA/Interest ≥ 2–2.5× (coverage ratio).</div>
       </div>
       <div class="formula-card">
         <div class="formula-name">Dividend Recap Impact on IRR</div>
         <div class="formula-eq"><span class="var">Earlier cash out</span> <span class="op">→</span> <span class="var">↑ IRR</span>, same <span class="var">MoM</span></div>
-        <div class="formula-note">PE firm borrows more, pays itself a dividend. Boosts IRR by returning capital early without a full exit.</div>
+        <div class="formula-worded">When a PE firm receives cash earlier through a dividend recapitalisation, the IRR increases because the same total return is achieved over a shorter effective time period, even though the Money-on-Money multiple is unchanged.</div>
+        <div class="formula-note">PE firm borrows more, pays itself a dividend before the full exit.</div>
       </div>
     </div>
   </div>
@@ -335,31 +985,37 @@ header{width:100%;max-width:960px;padding:28px 24px 12px;display:flex;align-item
       <div class="formula-card">
         <div class="formula-name">Accretion / Dilution Test</div>
         <div class="formula-eq"><span class="var">Seller Yield</span> <span class="op">></span> <span class="var">Weighted Cost</span> <span class="op">→</span> Accretive</div>
-        <div class="formula-note">Seller Yield = Seller NI / Purchase Equity Value. Weighted Cost = blend of cash, debt, stock costs.</div>
+        <div class="formula-worded">A deal is accretive if the Seller's Purchase Earnings Yield — calculated as the Seller's Net Income divided by the Purchase Equity Value — exceeds the Weighted Cost of Acquisition, which is the blended after-tax cost of the cash, debt, and stock used to fund the deal.</div>
+        <div class="formula-note">Seller Yield = Seller NI / Purchase Equity Value.</div>
       </div>
       <div class="formula-card">
         <div class="formula-name">Cost of Stock Funding</div>
         <div class="formula-eq"><span class="var">Cost of Stock</span> <span class="op">=</span> 1 <span class="op">/</span> <span class="var">Buyer P/E</span></div>
+        <div class="formula-worded">The cost of funding an acquisition with stock equals one divided by the Buyer's Price-to-Earnings ratio, which is the Buyer's earnings yield. If the Buyer's P/E is higher than the Seller's purchase P/E in a 100% stock deal, the acquisition is accretive.</div>
         <div class="formula-note">If Buyer P/E > Seller purchase P/E in a 100% stock deal → accretive.</div>
       </div>
       <div class="formula-card">
         <div class="formula-name">After-Tax Cost of Debt / Cash</div>
         <div class="formula-eq"><span class="var">After-Tax Cost</span> <span class="op">=</span> <span class="var">Rate</span> <span class="op">×</span> (1 <span class="op">−</span> <span class="var">t</span>)</div>
-        <div class="formula-note">Interest is tax-deductible. At 25% tax, a 10% debt rate costs only 7.5% after tax.</div>
+        <div class="formula-worded">The after-tax cost of debt or foregone interest on cash equals the pre-tax interest rate multiplied by one minus the Tax Rate, since interest payments are tax-deductible.</div>
+        <div class="formula-note">At 25% tax, a 10% debt rate costs only 7.5% after tax.</div>
       </div>
       <div class="formula-card">
         <div class="formula-name">Goodwill (Acquisition)</div>
         <div class="formula-eq"><span class="var">Goodwill</span> <span class="op">=</span> <span class="var">Purchase Price</span> <span class="op">−</span> <span class="var">Fair Value of Net Assets</span></div>
-        <div class="formula-note">Net Assets = Assets − Liabilities at fair value. First allocate to identifiable intangibles, then Goodwill plugs the gap.</div>
+        <div class="formula-worded">Goodwill equals the Purchase Price minus the Fair Value of Net Assets acquired, where Net Assets equals Assets minus Liabilities measured at fair value. Any excess purchase price first allocated to identifiable intangible assets; Goodwill plugs the remaining gap.</div>
+        <div class="formula-note">Typical control premiums: 20–30%+.</div>
       </div>
       <div class="formula-card">
         <div class="formula-name">Shares Issued in Stock Deal</div>
         <div class="formula-eq"><span class="var">New Shares</span> <span class="op">=</span> <span class="var">Purchase Equity Value</span> <span class="op">/</span> <span class="var">Buyer Share Price</span></div>
-        <div class="formula-note">Combined EPS = Combined NI / (Buyer Shares + New Shares). Compare to standalone Buyer EPS.</div>
+        <div class="formula-worded">New Shares Issued equals the Purchase Equity Value divided by the Buyer's Share Price. Combined EPS then equals Combined Net Income divided by the sum of Buyer Shares and New Shares Issued, and is compared to the Buyer's standalone EPS to determine accretion or dilution.</div>
+        <div class="formula-note">Combined EPS = Combined NI / (Buyer Shares + New Shares).</div>
       </div>
       <div class="formula-card">
         <div class="formula-name">Purchase Premium</div>
         <div class="formula-eq"><span class="var">Premium</span> <span class="op">=</span> (<span class="var">Offer Price</span> <span class="op">−</span> <span class="var">Pre-Announcement Price</span>) <span class="op">/</span> <span class="var">Pre-Announcement Price</span></div>
+        <div class="formula-worded">The purchase premium equals the Offer Price minus the Pre-Announcement Share Price, divided by the Pre-Announcement Share Price. This represents the percentage above the unaffected trading price that the buyer is paying to acquire control.</div>
         <div class="formula-note">Typical control premiums: 20–30%+. Precedent transactions include this; public comps do not.</div>
       </div>
     </div>
@@ -371,22 +1027,26 @@ header{width:100%;max-width:960px;padding:28px 24px 12px;display:flex;align-item
       <div class="formula-card">
         <div class="formula-name">Net Operating Income (NOI)</div>
         <div class="formula-eq"><span class="var">NOI</span> <span class="op">=</span> <span class="var">Property Revenue</span> <span class="op">−</span> <span class="var">Operating Expenses</span> <span class="op">−</span> <span class="var">Property Taxes</span></div>
-        <div class="formula-note">Excludes interest, debt repayment, and most CapEx. Real estate equivalent of EBITDA.</div>
+        <div class="formula-worded">Net Operating Income equals Property Revenue minus Operating Expenses minus Property Taxes, excluding interest expense, debt repayments, and most capital expenditures.</div>
+        <div class="formula-note">Real estate equivalent of EBITDA. Capital-structure neutral.</div>
       </div>
       <div class="formula-card">
         <div class="formula-name">Cap Rate</div>
         <div class="formula-eq"><span class="var">Cap Rate</span> <span class="op">=</span> <span class="var">Forward NOI</span> <span class="op">/</span> <span class="var">Property Value</span></div>
-        <div class="formula-note">Reciprocal of a valuation multiple. 5% Cap Rate = 20× NOI. Lower Cap Rate → higher value.</div>
+        <div class="formula-worded">The Cap Rate equals forward Net Operating Income divided by the current market price or asking price of the property. To value a property, rearrange to: Property Value equals forward NOI divided by the market Cap Rate.</div>
+        <div class="formula-note">5% Cap Rate = 20× NOI. Lower Cap Rate → higher value → safer, prime-location asset.</div>
       </div>
       <div class="formula-card">
         <div class="formula-name">FFO (Funds From Operations)</div>
         <div class="formula-eq"><span class="var">FFO</span> <span class="op">=</span> <span class="var">Net Income</span> <span class="op">+</span> <span class="var">RE D&A</span> <span class="op">−</span> <span class="var">Gains on Sales</span></div>
-        <div class="formula-note">Real estate D&A added back because properties typically appreciate. Replaces EPS for REITs.</div>
+        <div class="formula-worded">Funds From Operations equals Net Income plus real estate Depreciation and Amortization, minus Gains on Property Sales. D&A is added back because real estate properties typically appreciate rather than depreciate in value, making the accounting charge economically misleading.</div>
+        <div class="formula-note">Replaces EPS for REITs. Used in P/FFO multiple.</div>
       </div>
       <div class="formula-card">
         <div class="formula-name">AFFO (Adjusted FFO)</div>
         <div class="formula-eq"><span class="var">AFFO</span> <span class="op">=</span> <span class="var">FFO</span> <span class="op">−</span> <span class="var">Maintenance CapEx</span> <span class="op">−</span> <span class="var">Straight-Line Rent Adj.</span></div>
-        <div class="formula-note">More conservative than FFO. Closer to true distributable cash flow. Use P/AFFO for valuation.</div>
+        <div class="formula-worded">Adjusted Funds From Operations equals FFO minus Maintenance Capital Expenditures minus Straight-Line Rent Adjustments, producing a more conservative measure that better reflects the REIT's true distributable cash flow.</div>
+        <div class="formula-note">More conservative than FFO. Use P/AFFO for valuation.</div>
       </div>
     </div>
   </div>
@@ -397,32 +1057,38 @@ header{width:100%;max-width:960px;padding:28px 24px 12px;display:flex;align-item
       <div class="formula-card">
         <div class="formula-name">Leverage Ratio</div>
         <div class="formula-eq"><span class="var">Debt / EBITDA</span></div>
+        <div class="formula-worded">The leverage ratio equals total Debt divided by EBITDA, measuring how many years of earnings before interest, taxes, depreciation, and amortisation it would take to repay all debt.</div>
         <div class="formula-note">Investment grade: &lt;3×. LBO range: 4–6×. Higher = riskier. Lenders set max covenant.</div>
       </div>
       <div class="formula-card">
         <div class="formula-name">Interest Coverage</div>
         <div class="formula-eq"><span class="var">EBITDA / Interest Expense</span></div>
+        <div class="formula-worded">The interest coverage ratio equals EBITDA divided by Interest Expense, measuring how many times the company can cover its interest payments from operating earnings.</div>
         <div class="formula-note">Healthy: ≥2.5×. Below 1× = company can't cover interest from operations.</div>
       </div>
       <div class="formula-card">
         <div class="formula-name">Price / Earnings (P/E)</div>
         <div class="formula-eq"><span class="var">P/E</span> <span class="op">=</span> <span class="var">Equity Value</span> <span class="op">/</span> <span class="var">Net Income</span></div>
-        <div class="formula-note">Equity Value multiple — Net Income already deducts interest, so pair with Equity, not EV.</div>
+        <div class="formula-worded">The Price to Earnings ratio equals Equity Value divided by Net Income. Net Income already deducts interest expense, so it must be paired with Equity Value rather than Enterprise Value to avoid a capital-structure mismatch.</div>
+        <div class="formula-note">Equity Value multiple — always pair with Equity, not EV.</div>
       </div>
       <div class="formula-card">
         <div class="formula-name">P/Book Value (Banks)</div>
         <div class="formula-eq"><span class="var">P/BV</span> <span class="op">=</span> <span class="var">Equity Value</span> <span class="op">/</span> <span class="var">Book Value of Equity</span></div>
-        <div class="formula-note">P/TBV (Tangible Book) is most common in bank M&A. Excludes Goodwill and intangibles.</div>
+        <div class="formula-worded">Price to Book Value equals Equity Value divided by the Book Value of Equity. Price to Tangible Book Value is the most common variant in bank M&A, calculated by excluding Goodwill and other intangible assets from the denominator.</div>
+        <div class="formula-note">P/TBV most common in bank M&A. Excludes Goodwill and intangibles.</div>
       </div>
       <div class="formula-card">
         <div class="formula-name">LTV / CAC (SaaS)</div>
         <div class="formula-eq"><span class="var">LTV / CAC</span> <span class="op">></span> 3× <span class="op">=</span> Healthy</div>
-        <div class="formula-note">LTV = lifetime customer value. CAC = customer acquisition cost. Net Revenue Retention > 100% = expansion exceeds churn.</div>
+        <div class="formula-worded">The ratio of Lifetime Customer Value to Customer Acquisition Cost should exceed three times for a healthy SaaS business, meaning each customer generates at least three times what it cost to acquire them. Net Revenue Retention above 100% indicates that expansion revenue from existing customers exceeds losses from churn.</div>
+        <div class="formula-note">Net Revenue Retention &gt;100% = expansion exceeds churn.</div>
       </div>
       <div class="formula-card">
         <div class="formula-name">Utility Allowed Revenue</div>
         <div class="formula-eq"><span class="var">Revenue</span> <span class="op">=</span> <span class="var">Pre-Tax Income</span> <span class="op">+</span> <span class="var">Interest</span> <span class="op">+</span> <span class="var">O&M</span> <span class="op">+</span> <span class="var">D&A</span></div>
-        <div class="formula-note">Pre-Tax Income = Allowed NI / (1−t). Allowed NI = Equity Base × Authorized ROE.</div>
+        <div class="formula-worded">Allowed Revenue for a regulated utility equals Pre-Tax Income plus Interest Expense plus Operating and Maintenance costs plus Depreciation and Amortisation, where Pre-Tax Income equals Allowed Net Income divided by one minus the Tax Rate, and Allowed Net Income equals the Equity Rate Base multiplied by the Authorised Return on Equity.</div>
+        <div class="formula-note">Allowed NI = Equity Base × Authorized ROE. Pre-Tax Income = Allowed NI / (1−t).</div>
       </div>
     </div>
   </div>
@@ -436,7 +1102,7 @@ header{width:100%;max-width:960px;padding:28px 24px 12px;display:flex;align-item
         <div class="card-num" id="cn">1/0</div>
         <div class="card-tag" id="ctag">Category</div>
         <div class="card-q" id="cq">Loading…</div>
-        <div class="flip-hint">click to reveal →</div>
+        <div class="flip-hint">CLICK TO REVEAL</div>
       </div>
       <div class="card-face card-back">
         <div class="card-num" id="cn2">1/0</div>
@@ -446,22 +1112,22 @@ header{width:100%;max-width:960px;padding:28px 24px 12px;display:flex;align-item
     </div>
   </div>
   <div class="controls" id="controls">
-    <button class="btn" onclick="prev()">← Prev</button>
-    <button class="btn skip" onclick="markRev()">✕ Review Later</button>
-    <button class="btn know" onclick="markKnow()">✓ Got It</button>
-    <button class="btn" onclick="next()">Next →</button>
+    <button class="btn" onclick="prev()">&#8592; PREV</button>
+    <button class="btn skip" onclick="markRev()">&#10005; REVIEW LATER</button>
+    <button class="btn know" onclick="markKnow()">&#10003; MASTERED</button>
+    <button class="btn" onclick="next()">NEXT &#8594;</button>
   </div>
   <div class="complete-screen" id="done">
-    <div class="complete-icon">🏦</div>
-    <h2>Deck Complete!</h2>
-    <p>You've gone through all cards in this set.</p>
+    <div class="complete-icon">◈</div>
+    <h2>Deck Complete</h2>
+    <p>You've gone through all cards in this set. Review your results below.</p>
     <div class="score-grid">
-      <div class="stat"><div class="score-num g" id="f-know">0</div><div class="score-label">Know It</div></div>
+      <div class="stat"><div class="score-num g" id="f-know">0</div><div class="score-label">Mastered</div></div>
       <div class="stat"><div class="score-num r" id="f-rev">0</div><div class="score-label">Review</div></div>
     </div>
     <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center">
-      <button class="btn primary" onclick="retryRev()">Retry Review Cards</button>
-      <button class="btn" onclick="restartAll()">Start Over</button>
+      <button class="btn primary" onclick="retryRev()">RETRY REVIEW CARDS</button>
+      <button class="btn" onclick="restartAll()">START OVER</button>
     </div>
   </div>
   <div class="kb-hints" id="kbh">
